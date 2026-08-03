@@ -1,5 +1,5 @@
 import TopBar from "./components/TopBar/TopBar";
-import Navbar from "./components/Navbar/Navbar";
+import Navbar from "./components/Navbar/navbar";
 import Hero from "./components/Hero/Hero";
 import AboutTemple from "./components/AboutTemple/AboutTemple";
 import DailyAarti from "./components/DailyAarti/DailyAarti";
