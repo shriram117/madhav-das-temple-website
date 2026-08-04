@@ -1,4 +1,5 @@
 import "./Navbar.css";
+import { Link } from "react-router-dom";
 
 function Navbar() {
     return (
@@ -6,11 +7,10 @@ function Navbar() {
 
             <div className="container">
 
-                <a href="/" className="logo">
-
-                    🛕 Shri Madhav Das Ji
-
-                </a>
+                <Link to="/" className="logo">
+                    🛕
+                    <span>Shri Madhav Das Ji</span>
+                </Link>
 
                 <button
                     className="navbar-toggler"
@@ -48,6 +48,11 @@ function Navbar() {
                         <a className="nav-link"  href="#donation">
                             Donate
                         </a>
+                        </li>
+                        <li className="nav-item ms-3">
+                            <Link to="/login" className="login-btn">
+                                Admin Login
+                            </Link>
                         </li>
                     </ul>
 

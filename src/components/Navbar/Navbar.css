@@ -1,45 +1,72 @@
+/* ===========================
+   Navbar
+=========================== */
+
 .navbar {
+    background: #ffffff;
+    padding: 12px 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     position: sticky;
     top: 0;
     z-index: 999;
-    background: rgba(255,255,255,.95);
-    backdrop-filter: blur(10px);
 }
 
 .logo {
+    font-size: 30px;
+    font-weight: 700;
+    color: #e67e22;
+    text-decoration: none;
     display: flex;
     align-items: center;
-    font-size: 28px;
-    font-weight: bold;
+    gap: 8px;
 }
 
-.logo img
-{
-    width: 55px;
-    height: 55px;
-    margin-right: 12px;
+    .logo:hover {
+        color: #d35400;
+        text-decoration: none;
+    }
+
+.navbar-nav {
+    align-items: center;
+    gap: 10px;
 }
 
 .nav-link {
-    font-size: 17px;
+    color: #333 !important;
+    font-size: 16px;
     font-weight: 600;
-color: #333 !important;
+    transition: all .3s ease;
 }
 
-.nav-link:hover {
-    color: #e67e22 !important;
-}
+    .nav-link:hover {
+        color: #e67e22 !important;
+    }
 
-.donate-btn {
-background: #e67e22;
-    color: white;
+.login-btn {
+    background: linear-gradient(135deg,#ff9800,#e67e22);
+    color: #fff !important;
+    padding: 10px 22px;
     border-radius: 30px;
-padding: 8px 20px;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
+    transition: .3s;
+    display: inline-block;
 }
 
-.donate-btn:hover {
-    background: #c46b00;
-    color: white;
+    .login-btn:hover {
+        color: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(230,126,34,.3);
+    }
+
+@media(max-width:991px) {
+
+    .navbar-nav {
+        margin-top: 20px;
+        gap: 15px;
+    }
+
+    .login-btn {
+        width: fit-content;
+    }
 }
