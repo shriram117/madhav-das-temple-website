@@ -1,0 +1,11 @@
+.dashboard-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+    .dashboard-item:last-child {
+        border-bottom: none;
+    }

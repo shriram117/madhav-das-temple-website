@@ -1,34 +1,102 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import "../css/Dashboard.css";
+import AdminLayout from "../components/AdminLayout";
+import DashboardCards from "../components/DashboardCards";
+import RecentGallery from "../components/RecentGallery";
+import UpcomingEvents from "../components/UpcomingEvents";
+import QuickActions from "../components/QuickActions";
 function Dashboard() {
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const [dashboard, setDashboard] = useState({
+
+        gallery: 0,
+        events: 0,
+        donations: 0,
+        users: 0
+
+    });
+
+    const loadDashboard = async () => {
+
+        try {
+
+            const response = await axios.get(
+                "http://localhost:5000/api/dashboard"
+            );
+
+            setDashboard({
+
+                gallery: Number(response.data.gallery),
+                events: Number(response.data.events),
+                donations: Number(response.data.donations),
+                users: Number(response.data.users)
+
+            });
+
+        }
+        catch (err) {
+
+            console.log(err);
+
+        }
+
+    };
+
+    useEffect(() => {
+
+        loadDashboard();
+
+    }, []);
+
+    const cards = [
+
+        {
+            title: "Gallery Images",
+            value: dashboard.gallery,
+            icon: "🖼️",
+            color: "#3498db"
+        },
+        {
+            title: "Events",
+            value: dashboard.events,
+            icon: "📅",
+            color: "#27ae60"
+        },
+        {
+            title: "Donations",
+            value: "₹" + dashboard.donations,
+            icon: "💰",
+            color: "#f39c12"
+        },
+        {
+            title: "Users",
+            value: dashboard.users,
+            icon: "👥",
+            color: "#9b59b6"
+        }
+
+    ];
 
     return (
 
-        <div style={{ padding: "30px" }}>
+        <AdminLayout>
 
-            <h1>🛕 Madhav Das Ji Temple</h1>
+            <h2 className="page-title">
+                Dashboard
+            </h2>
 
-            <hr />
+            <DashboardCards cards={cards} />
+            <QuickActions />
+            <div className="dashboard-grid">
 
-            <h2>Welcome</h2>
+                <RecentGallery />
 
-            <h3>{user.full_name}</h3>
+                <UpcomingEvents />
 
-            <p>Role : {user.role}</p>
+            </div>
 
-            <button
-                onClick={() => {
-
-                    localStorage.removeItem("user");
-
-                    window.location.href = "/";
-
-                }}
-            >
-                Logout
-            </button>
-
-        </div>
+        </AdminLayout>
 
     );
 

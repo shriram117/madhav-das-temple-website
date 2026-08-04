@@ -1,0 +1,48 @@
+.recent-gallery {
+    background: #fff;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+    .card-header button {
+        border: none;
+        background: none;
+        color: #2563eb;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+.gallery-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+    .gallery-item:last-child {
+        border-bottom: none;
+    }
+
+    .gallery-item img {
+        width: 70px;
+        height: 70px;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+    .gallery-item h5 {
+        margin: 0;
+    }
+
+    .gallery-item small {
+        color: #777;
+    }
