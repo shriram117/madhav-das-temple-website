@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../../config/api";
 import "../../css/Login.css";
 
 function Login() {
@@ -14,14 +15,17 @@ function Login() {
         try {
 
             const response = await axios.post(
-                "http://localhost:5000/api/auth/login",
+                `${API_BASE_URL}/auth/login`,
                 {
                     username,
                     password
                 }
             );
 
-            localStorage.setItem("user", JSON.stringify(response.data.user));
+            localStorage.setItem(
+                "user",
+                JSON.stringify(response.data.user)
+            );
 
             navigate("/dashboard");
 
@@ -35,37 +39,8 @@ function Login() {
     };
 
     return (
-
-        <div className="login-container">
-
-            <div className="login-box">
-
-                <h2>🛕 Temple Admin Login</h2>
-
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-
-                <button onClick={login}>
-                    Login
-                </button>
-
-            </div>
-
-        </div>
-
+        // Your existing JSX
     );
-
 }
 
 export default Login;
