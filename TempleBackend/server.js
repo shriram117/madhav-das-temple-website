@@ -17,12 +17,13 @@ const app = express();
 
 // Middleware
 // app.use(cors());
-app.use(
-    cors({
-        origin: process.env.FRONTEND_URL,
-        credentials: true,
-    })
-);
+app.use(cors({
+    origin: [
+        "http://localhost:5173",
+        "https://madhav-das-temple-website-ktc2.vercel.app"
+    ],
+    credentials: true
+}));
 app.use(express.json());
 
 // Static Folder for Uploaded Images
