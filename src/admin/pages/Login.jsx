@@ -39,8 +39,37 @@ function Login() {
     };
 
     return (
-        // Your existing JSX
+
+        <div className="login-container">
+
+            <div className="login-box">
+
+                <h2>🛕 Temple Admin Login</h2>
+
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+
+                <button onClick={login}>
+                    Login
+                </button>
+
+            </div>
+
+        </div>
+
     );
+
 }
 
 export default Login;
