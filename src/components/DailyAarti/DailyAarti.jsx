@@ -1,62 +1,112 @@
 import "./DailyAarti.css";
-import { FaSun, FaCloudSun, FaMoon, FaMusic } from "react-icons/fa";
-
+import { useEffect, useState } from "react";
+import axios from "axios";
+import API_BASE_URL from "../../config/api";
+import { getImageUrl } from "../../utils/imageUrl";
 function DailyAarti() {
 
-    const aartiList = [
-        {
-            icon: <FaSun />,
-            title: "Mangla Aarti",
-            time: "05:30 AM"
-        },
-        {
-            icon: <FaCloudSun />,
-            title: "Morning Aarti",
-            time: "08:00 AM"
-        },
-        {
-            icon: <FaMoon />,
-            title: "Evening Aarti",
-            time: "07:00 PM"
-        },
-        {
-            icon: <FaMusic />,
-            title: "Bhajan Sandhya",
-            time: "Every Saturday"
+    const [aartiList, setAartiList] = useState([]);
+
+    useEffect(() => {
+
+        loadAarti();
+
+    }, []);
+
+    const loadAarti = async () => {
+
+        try {
+
+            const response = await axios.get(
+                `${API_BASE_URL}/aarti`
+            );
+
+            const activeAarti = response.data.filter(
+                item => item.status === true
+            );
+
+            setAartiList(activeAarti);
+
         }
-    ];
+        catch (err) {
+
+            console.log(err);
+
+        }
+
+    };
 
     return (
 
-        <section id="aarti" className="aarti-section">
+        <section
+            id="aarti"
+            className="aarti-section"
+        >
 
             <div className="container">
 
                 <h2 className="text-center mb-5">
+
                     Daily Aarti
+
                 </h2>
 
                 <div className="row">
 
-                    {aartiList.map((item, index) => (
+                    {
 
-                        <div className="col-lg-3 col-md-6 mb-4" key={index}>
+                        aartiList.map((item) => (
 
-                            <div className="aarti-card">
+                            <div
+                                className="col-lg-3 col-md-6 mb-4"
+                                key={item.aarti_id}
+                            >
 
-                                <div className="icon">
-                                    {item.icon}
+                                <div className="aarti-card">
+
+                                    {
+
+                                        item.image_url && (
+
+                                            <img
+
+                                                src={getImageUrl(item.image_url)}
+
+                                                alt={item.aarti_name}
+
+                                                className="aarti-image"
+
+                                            />
+
+                                        )
+
+                                    }
+
+                                    <h4>
+
+                                        {item.aarti_name}
+
+                                    </h4>
+
+                                    <p className="aarti-time">
+
+                                        {item.aarti_time}
+
+                                    </p>
+
+                                    <p>
+
+                                        {item.description}
+
+                                    </p>
+
                                 </div>
-
-                                <h4>{item.title}</h4>
-
-                                <p>{item.time}</p>
 
                             </div>
 
-                        </div>
+                        ))
 
-                    ))}
+                    }
 
                 </div>
 

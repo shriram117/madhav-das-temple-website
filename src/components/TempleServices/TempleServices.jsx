@@ -1,47 +1,40 @@
 import "./TempleServices.css";
-import {
-    FaVideo,
-    FaCalendarAlt,
-    FaImages,
-    FaDonate,
-    FaBookOpen,
-    FaPhoneAlt
-} from "react-icons/fa";
-
+import { useEffect, useState } from "react";
+import axios from "axios";
+import API_BASE_URL from "../../config/api";
+import { getImageUrl } from "../../utils/imageUrl";
 function TempleServices() {
 
-    const services = [
-        {
-            icon: <FaVideo />,
-            title: "Live Darshan",
-            description: "Watch live darshan from anywhere."
-        },
-        {
-            icon: <FaCalendarAlt />,
-            title: "Upcoming Events",
-            description: "View temple festivals and programs."
-        },
-        {
-            icon: <FaImages />,
-            title: "Photo Gallery",
-            description: "Explore temple memories."
-        },
-        {
-            icon: <FaDonate />,
-            title: "Online Donation",
-            description: "Support temple activities."
-        },
-        {
-            icon: <FaBookOpen />,
-            title: "Temple History",
-            description: "Know the history of the temple."
-        },
-        {
-            icon: <FaPhoneAlt />,
-            title: "Contact",
-            description: "Get in touch with temple management."
+    const [services, setServices] = useState([]);
+
+    useEffect(() => {
+
+        loadServices();
+
+    }, []);
+
+    const loadServices = async () => {
+
+        try {
+
+            const response = await axios.get(
+                `${API_BASE_URL}/services`
+            );
+
+            const activeServices = response.data.filter(
+                service => service.status === true
+            );
+
+            setServices(activeServices);
+
         }
-    ];
+        catch (err) {
+
+            console.log(err);
+
+        }
+
+    };
 
     return (
 
@@ -50,30 +43,61 @@ function TempleServices() {
             <div className="container">
 
                 <h2 className="text-center mb-5">
+
                     Temple Services
+
                 </h2>
 
                 <div className="row">
 
-                    {services.map((service, index) => (
+                    {
 
-                        <div className="col-lg-4 col-md-6 mb-4" key={index}>
+                        services.map((service) => (
 
-                            <div className="service-card">
+                            <div
+                                className="col-lg-4 col-md-6 mb-4"
+                                key={service.service_id}
+                            >
 
-                                <div className="service-icon">
-                                    {service.icon}
+                                <div className="service-card">
+
+                                    {
+
+                                        service.image_url && (
+
+                                            <img
+
+                                                src={getImageUrl(service.image_url)}
+
+                                                alt={service.service_name}
+
+                                                className="service-image"
+
+                                            />
+
+                                        )
+
+                                    }
+
+                                    <h4 className="mt-3">
+
+                                        {service.service_name}
+
+                                    </h4>
+
+                                    <p>
+
+                                        {service.description}
+
+                                    </p>
+
                                 </div>
-
-                                <h4>{service.title}</h4>
-
-                                <p>{service.description}</p>
 
                             </div>
 
-                        </div>
+                        ))
 
-                    ))}
+                    }
 
                 </div>
 

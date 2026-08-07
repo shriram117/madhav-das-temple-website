@@ -1,47 +1,97 @@
 .footer {
-    background: #5C2E00;
-    color: white;
+    background: linear-gradient(135deg,#5C2E00,#8B4513);
+    color: #fff;
     padding: 70px 0 20px;
 }
 
+    .footer h3 {
+        font-size: 30px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #FFD700;
+    }
+
     .footer h4 {
         margin-bottom: 20px;
+        color: #FFD700;
+        font-weight: 600;
+    }
+
+    .footer p {
+        color: #f1f1f1;
+        line-height: 28px;
+        margin-bottom: 12px;
     }
 
     .footer ul {
         list-style: none;
         padding: 0;
+        margin: 0;
     }
 
-    .footer li {
-        margin-bottom: 10px;
-        cursor: pointer;
-    }
-
-        .footer li:hover {
-            color: #FFD700;
+        .footer ul li {
+            margin-bottom: 12px;
         }
 
+            .footer ul li a {
+                color: #fff;
+                text-decoration: none;
+                transition: .3s;
+            }
+
+                .footer ul li a:hover {
+                    color: #FFD700;
+                    padding-left: 8px;
+                }
+
 .social-icons {
-    font-size: 30px;
     display: flex;
-    gap: 20px;
+    gap: 18px;
     margin-top: 20px;
 }
 
-    .social-icons svg {
-        cursor: pointer;
+    .social-icons a {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255,255,255,.12);
+        color: #fff;
+        font-size: 20px;
+        text-decoration: none;
+        transition: .3s;
     }
 
-        .social-icons svg:hover {
-            color: #FFD700;
+        .social-icons a:hover {
+            background: #FFD700;
+            color: #5C2E00;
+            transform: translateY(-5px);
         }
 
-hr {
-    margin: 40px 0;
+.footer hr {
     border-color: rgba(255,255,255,.2);
+    margin: 40px 0 20px;
 }
 
 .copyright {
     text-align: center;
+    font-size: 15px;
+    color: #ddd;
+}
+
+@media(max-width:768px) {
+
+    .footer {
+        text-align: center;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+
+    .footer h3 {
+        font-size: 24px;
+    }
 }

@@ -10,24 +10,32 @@ const galleryRoutes = require("./routes/galleryRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const userRoutes = require("./routes/userRoutes");
+const settingsRoutes = require("./routes/settingsRoutes");
+const aartiRoutes = require("./routes/aartiRoutes");
+const serviceRoutes = require("./routes/serviceRoutes");
 const app = express();
 
 // Middleware
-app.use(cors());
+// app.use(cors());
+app.use(
+    cors({
+        origin: process.env.FRONTEND_URL,
+        credentials: true,
+    })
+);
 app.use(express.json());
 
 // Static Folder for Uploaded Images
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use(
-    "/uploads",
-    express.static(path.join(__dirname, "uploads"))
-);
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/settings", settingsRoutes);
+app.use("/api/aarti", aartiRoutes);
+app.use("/api/services", serviceRoutes);
 // Test PostgreSQL Connection
 pool.connect()
     .then(() => {
@@ -47,5 +55,5 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`🚀 Server running on PORT ${PORT}`);
 });

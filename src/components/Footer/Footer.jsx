@@ -1,8 +1,48 @@
 import "./Footer.css";
-import { FaFacebook, FaInstagram, FaYoutube, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import API_BASE_URL from "../../config/api";
+
+import {
+    FaFacebook,
+    FaInstagram,
+    FaYoutube,
+    FaPhoneAlt,
+    FaEnvelope,
+    FaMapMarkerAlt
+} from "react-icons/fa";
 
 function Footer() {
+
+    const [settings, setSettings] = useState({});
+
+    useEffect(() => {
+
+        loadSettings();
+
+    }, []);
+
+    const loadSettings = async () => {
+
+        try {
+
+            const response = await axios.get(
+                `${API_BASE_URL}/settings`
+            );
+
+            setSettings(response.data);
+
+        }
+        catch (err) {
+
+            console.log(err);
+
+        }
+
+    };
+
     return (
+
         <footer className="footer">
 
             <div className="container">
@@ -11,11 +51,16 @@ function Footer() {
 
                     <div className="col-lg-4">
 
-                        <h3>🛕 Shri Madhav Das Ji Temple</h3>
+                        <h3>
+
+                            🛕 {settings.temple_name || "Shri Madhav Das Ji Temple"}
+
+                        </h3>
 
                         <p>
-                            A sacred place of devotion, peace, and spirituality
-                            located in Ghinoi, Rajasthan.
+
+                            {settings.about_temple || "Temple Information"}
+
                         </p>
 
                     </div>
@@ -26,15 +71,15 @@ function Footer() {
 
                         <ul>
 
-                            <li>Home</li>
+                            <li><a href="#home">Home</a></li>
 
-                            <li>About</li>
+                            <li><a href="#about">About</a></li>
 
-                            <li>Gallery</li>
+                            <li><a href="#gallery">Gallery</a></li>
 
-                            <li>Events</li>
+                            <li><a href="#aarti">Daily Aarti</a></li>
 
-                            <li>Donation</li>
+                            <li><a href="#contact">Contact</a></li>
 
                         </ul>
 
@@ -44,11 +89,23 @@ function Footer() {
 
                         <h4>Contact</h4>
 
-                        <p><FaPhoneAlt /> +91-8740881142</p>
+                        <p>
 
-                        <p><FaEnvelope />1008shrimadhavdasji@gmail.com</p>
+                            <FaPhoneAlt /> {settings.mobile_no}
 
-                        <p><FaMapMarkerAlt /> Ghinoi, Rajasthan</p>
+                        </p>
+
+                        <p>
+
+                            <FaEnvelope /> {settings.email}
+
+                        </p>
+
+                        <p>
+
+                            <FaMapMarkerAlt /> {settings.address}
+
+                        </p>
 
                     </div>
 
@@ -58,11 +115,59 @@ function Footer() {
 
                         <div className="social-icons">
 
-                            <FaFacebook />
+                            {
 
-                            <FaInstagram />
+                                settings.facebook_url && (
 
-                            <FaYoutube />
+                                    <a
+                                        href={settings.facebook_url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+
+                                        <FaFacebook />
+
+                                    </a>
+
+                                )
+
+                            }
+
+                            {
+
+                                settings.instagram_url && (
+
+                                    <a
+                                        href={settings.instagram_url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+
+                                        <FaInstagram />
+
+                                    </a>
+
+                                )
+
+                            }
+
+                            {
+
+                                settings.youtube_url && (
+
+                                    <a
+                                        href={settings.youtube_url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+
+                                        <FaYoutube />
+
+                                    </a>
+
+                                )
+
+                            }
 
                         </div>
 
@@ -74,14 +179,16 @@ function Footer() {
 
                 <div className="copyright">
 
-                    © 2026 Shriram Sharma Developer | All Rights Reserved
+                    © {new Date().getFullYear()} {settings.temple_name} | Developed By <strong>Shriram Sharma</strong>
 
                 </div>
 
             </div>
 
         </footer>
+
     );
+
 }
 
 export default Footer;

@@ -1,25 +1,40 @@
 import "./UpcomingEvents.css";
-import { FaCalendarAlt } from "react-icons/fa";
-
+import { useEffect, useState } from "react";
+import axios from "axios";
+import API_BASE_URL from "../../config/api";
+import { getImageUrl } from "../../utils/imageUrl";
 function UpcomingEvents() {
 
-    const events = [
-        {
-            title: "Ramdhuni Purnima",
-            date: "10 August 2026",
-            description: "Special Ramdhuni and Bhajan Sandhya."
-        },
-        {
-            title: "Shrimad Bhagwat Katha",
-            date: "18 August 2026",
-            description: "Seven-day spiritual discourse."
-        },
-        {
-            title: "Janmashtami Mahotsav",
-            date: "26 August 2026",
-            description: "Celebrate the birth of Lord Krishna."
+    const [events, setEvents] = useState([]);
+
+    useEffect(() => {
+
+        loadEvents();
+
+    }, []);
+
+    const loadEvents = async () => {
+
+        try {
+
+            const response = await axios.get(
+                `${API_BASE_URL}/events`
+            );
+
+            const activeEvents = response.data
+                .filter(item => item.status === true)
+                .slice(0, 3);
+
+            setEvents(activeEvents);
+
         }
-    ];
+        catch (err) {
+
+            console.log(err);
+
+        }
+
+    };
 
     return (
 
@@ -28,36 +43,78 @@ function UpcomingEvents() {
             <div className="container">
 
                 <h2 className="text-center mb-5">
-                    Upcoming Events
+
+                    Upcoming Temple Events
+
                 </h2>
 
                 <div className="row">
 
-                    {events.map((event, index) => (
+                    {
 
-                        <div className="col-lg-4 mb-4" key={index}>
+                        events.length > 0 ?
 
-                            <div className="event-card">
+                        events.map((item) => (
 
-                                <div className="event-icon">
-                                    <FaCalendarAlt />
+                            <div
+                                className="col-lg-4 col-md-6 mb-4"
+                                key={item.event_id}
+                            >
+
+                                <div className="event-card">
+
+                                    <div className="event-image-box">
+
+                                        <img
+                                            src={getImageUrl(item.image_url)}
+                                            alt={item.event_name}
+                                            className="event-image"
+                                        />
+
+                                    </div>
+
+                                    <div className="event-body">
+
+                                        <span className="date-badge">
+
+                                            📅 {new Date(item.event_date).toLocaleDateString("en-GB")}
+
+                                        </span>
+
+                                        <h4>
+
+                                            {item.event_name}
+
+                                        </h4>
+
+                                        <p className="event-desc">
+
+                                            {item.description}
+
+                                        </p>
+
+                                        <button className="event-btn">
+
+                                            View Details
+
+                                        </button>
+
+                                    </div>
+
                                 </div>
-
-                                <h4>{event.title}</h4>
-
-                                <h6>{event.date}</h6>
-
-                                <p>{event.description}</p>
-
-                                <button className="event-btn">
-                                    Know More
-                                </button>
 
                             </div>
 
-                        </div>
+                        )):
+                              <div className="col-12 text-center">
 
-                    ))}
+                            <h4>No Upcoming Events</h4>
+
+                         <p>Please check again later.</p>
+
+                    </div>
+
+                    }
 
                 </div>
 

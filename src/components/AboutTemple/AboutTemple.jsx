@@ -1,9 +1,44 @@
 import "./AboutTemple.css";
-import templeImage from "../../assets/images/temple/front.jpg";
-
+import { useEffect, useState } from "react";
+import axios from "axios";
+import API_BASE_URL from "../../config/api";
+import { getImageUrl } from "../../utils/imageUrl";
 function AboutTemple() {
+
+    const [settings, setSettings] = useState({});
+
+    useEffect(() => {
+
+        loadSettings();
+
+    }, []);
+
+    const loadSettings = async () => {
+
+        try {
+
+            const response = await axios.get(
+                `${API_BASE_URL}/settings`
+            );
+
+            setSettings(response.data);
+
+        }
+        catch (err) {
+
+            console.log(err);
+
+        }
+
+    };
+
     return (
-        <section id="about"  className="about-section" data-aos="fade-up">
+
+        <section
+            id="about"
+            className="about-section"
+            data-aos="fade-up"
+        >
 
             <div className="container">
 
@@ -11,38 +46,74 @@ function AboutTemple() {
 
                     <div className="col-lg-6">
 
-                        <img
-                            src={templeImage}
-                            alt="Shri Madhav Das Ji Temple"
-                            className="about-image"
-                        />
+                        {
+                            settings.temple_banner ?
+
+                                <img
+                                    src={getImageUrl(settings.temple_banner)}
+                                    alt={settings.temple_name}
+                                    className="about-image"
+                                />
+
+                                :
+
+                                <div className="about-image-placeholder">
+
+                                    No Image
+
+                                </div>
+                        }
 
                     </div>
 
                     <div className="col-lg-6">
 
                         <span className="section-tag">
+
                             ABOUT TEMPLE
+
                         </span>
 
                         <h2>
-                            Shri Madhav Das Ji Temple
+
+                            {
+                                settings.temple_name ||
+                                "Shri Madhav Das Ji Temple"
+                            }
+
                         </h2>
 
                         <p>
-                            Shri Madhav Das Ji Temple, situated in Ghinoi,
-                            Rajasthan, is a sacred place of faith and
-                            devotion. Devotees visit the temple daily for
-                            darshan, bhajan, seva, and spiritual peace.
+
+                            {
+                                settings.about_temple ||
+                                "Temple information will appear here."
+                            }
+
                         </p>
 
                         <p>
-                            The temple hosts religious events, Ramdhuni,
-                            festivals, and social activities throughout the year.
+
+                            <strong>Address :</strong> {settings.address}
+
+                            <br />
+
+                            <strong>City :</strong> {settings.city}
+
+                            <br />
+
+                            <strong>State :</strong> {settings.state}
+
+                            <br />
+
+                            <strong>Pincode :</strong> {settings.pincode}
+
                         </p>
 
                         <button className="read-more">
+
                             Read More
+
                         </button>
 
                     </div>
@@ -52,7 +123,9 @@ function AboutTemple() {
             </div>
 
         </section>
+
     );
+
 }
 
 export default AboutTemple;

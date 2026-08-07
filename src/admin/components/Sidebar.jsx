@@ -36,7 +36,12 @@ function Sidebar() {
             path: "/admin/aarti",
             icon: "🛕"
         },
-
+        // 👇 ADD THIS
+        {
+            name: "Temple Services",
+            path: "/admin/services",
+            icon: "🙏"
+        },
         {
             name: "News",
             path: "/admin/news",

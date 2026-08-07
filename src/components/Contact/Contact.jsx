@@ -1,14 +1,53 @@
 import "./Contact.css";
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import API_BASE_URL from "../../config/api";
+
+import {
+    FaMapMarkerAlt,
+    FaPhoneAlt,
+    FaEnvelope
+} from "react-icons/fa";
 
 function Contact() {
+
+    const [settings, setSettings] = useState({});
+
+    useEffect(() => {
+
+        loadSettings();
+
+    }, []);
+
+    const loadSettings = async () => {
+
+        try {
+
+            const response = await axios.get(
+                `${API_BASE_URL}/settings`
+            );
+
+            setSettings(response.data);
+
+        }
+        catch (err) {
+
+            console.log(err);
+
+        }
+
+    };
+
     return (
-        <section id="contact"  className="contact-section">
+
+        <section id="contact" className="contact-section">
 
             <div className="container">
 
                 <h2 className="text-center mb-5">
+
                     Contact Us
+
                 </h2>
 
                 <div className="row">
@@ -17,21 +56,46 @@ function Contact() {
 
                         <div className="contact-card">
 
-                            <h3>Shri Madhav Das Ji Temple</h3>
+                            <h3>
+
+                                {
+                                    settings.temple_name ||
+                                    "Shri Madhav Das Ji Temple"
+                                }
+
+                            </h3>
 
                             <p>
+
                                 <FaMapMarkerAlt className="icon" />
-                                Ghinoi, Chomu, Jaipur, Rajasthan
+
+                                {
+                                    settings.address ||
+                                    "Temple Address"
+                                }
+
                             </p>
 
                             <p>
+
                                 <FaPhoneAlt className="icon" />
-                                +91-8740881142
+
+                                {
+                                    settings.mobile_no ||
+                                    "+91-XXXXXXXXXX"
+                                }
+
                             </p>
 
                             <p>
+
                                 <FaEnvelope className="icon" />
-                                1008shrimadhavdasji@gmail.com
+
+                                {
+                                    settings.email ||
+                                    "info@temple.com"
+                                }
+
                             </p>
 
                         </div>
@@ -42,14 +106,30 @@ function Contact() {
 
                         <div className="map-container">
 
-                            <iframe
-                                title="Temple Location"
-                                src="https://www.google.com/maps?q=Ghinoi,Jaipur,Rajasthan&output=embed"
-                                width="100%"
-                                height="350"
-                                style={{ border: 0 }}
-                                loading="lazy"
-                            ></iframe>
+                            {
+                                settings.google_map ?
+
+                                    <iframe
+                                        title="Temple Location"
+                                        src={settings.google_map}
+                                        width="100%"
+                                        height="350"
+                                        style={{ border: 0 }}
+                                        loading="lazy"
+                                        allowFullScreen
+                                    ></iframe>
+
+                                    :
+
+                                    <iframe
+                                        title="Temple Location"
+                                        src="https://www.google.com/maps?q=Ghinoi,Jaipur,Rajasthan&output=embed"
+                                        width="100%"
+                                        height="350"
+                                        style={{ border: 0 }}
+                                        loading="lazy"
+                                    ></iframe>
+                            }
 
                         </div>
 
@@ -60,7 +140,9 @@ function Contact() {
             </div>
 
         </section>
+
     );
+
 }
 
 export default Contact;
