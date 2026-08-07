@@ -5,12 +5,12 @@ const login = async (req, res) => {
         const { username, password } = req.body;
 
         const sql = `
-            SELECT *
-            FROM admin_users
-            WHERE username = $1
-              AND password = $2
-              AND status = true
-        `;
+    SELECT *
+    FROM admin_users
+    WHERE username = $1
+      AND password = $2
+      AND status = 'true'
+`;
 
         const result = await pool.query(sql, [username, password]);
 
