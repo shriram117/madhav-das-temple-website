@@ -34,3 +34,6 @@ Thumbs.db
 .vscode/
 node_modules/
 .env
+
+# Vite production build
+/dist/
