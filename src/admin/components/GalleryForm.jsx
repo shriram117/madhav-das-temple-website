@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import API_BASE_URL from "../../config/api";
 function GalleryForm({ loadGallery, editData, closeForm }) {
 
     const [galleryId, setGalleryId] = useState(0);
@@ -65,7 +65,8 @@ function GalleryForm({ loadGallery, editData, closeForm }) {
                 }
 
                 await axios.post(
-                    "http://localhost:5000/api/gallery",
+                    
+                    `${API_BASE_URL}/gallery`,
                     formData,
                     {
                         headers: {
@@ -86,7 +87,8 @@ function GalleryForm({ loadGallery, editData, closeForm }) {
                 }
 
                 await axios.put(
-                    `http://localhost:5000/api/gallery/${galleryId}`,
+                   
+                    `${API_BASE_URL}/gallery/${galleryId}`,
                     formData,
                     {
                         headers: {

@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import API_BASE_URL, { SERVER_URL } from "../../../config/api";
 function TempleInfo({
 
     templeName,
@@ -75,7 +78,8 @@ function TempleInfo({
                             oldLogo && (
 
                                 <img
-                                    src={`http://localhost:5000${oldLogo}`}
+                                    src={`${API_BASE_URL} /gallery`}
+
                                     alt="Logo"
                                     className="img-thumbnail mt-2"
                                     style={{
@@ -113,7 +117,8 @@ function TempleInfo({
                             oldBanner && (
 
                                 <img
-                                    src={`http://localhost:5000${oldBanner}`}
+                                   
+                                    src={`${SERVER_URL}${oldBanner}`}
                                     alt="Banner"
                                     className="img-fluid mt-2 rounded border"
                                     style={{

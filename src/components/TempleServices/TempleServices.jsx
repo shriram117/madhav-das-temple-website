@@ -22,8 +22,9 @@ function TempleServices() {
             );
 
             const activeServices = response.data.filter(
-                service => service.status === true
+                service => String(service.status).toLowerCase() === "true"
             );
+
 
             setServices(activeServices);
 

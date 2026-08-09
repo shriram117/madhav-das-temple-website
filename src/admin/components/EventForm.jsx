@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import API_BASE_URL from "../../config/api";
 function EventForm({ loadEvents, editData, closeForm }) {
 
     const [title, setTitle] = useState("");
@@ -69,7 +69,8 @@ function EventForm({ loadEvents, editData, closeForm }) {
             if (eventId === 0) {
 
                 await axios.post(
-                    "http://localhost:5000/api/events",
+                   
+                    `${API_BASE_URL}/events`,
                     formData,
                     {
                         headers: {
@@ -81,7 +82,8 @@ function EventForm({ loadEvents, editData, closeForm }) {
             } else {
 
                 await axios.put(
-                    `http://localhost:5000/api/events/${eventId}`,
+                    
+                    `${API_BASE_URL}/events/${eventId}`,
                     formData,
                     {
                         headers: {

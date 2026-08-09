@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "../css/Gallery.css";
 import GalleryForm from "../components/GalleryForm";
+import API_BASE_URL, { SERVER_URL } from "../../config/api";
 function Gallery() {
 
     const [gallery, setGallery] = useState([]);
@@ -14,7 +15,8 @@ function Gallery() {
         try {
 
             const response = await axios.get(
-                "http://localhost:5000/api/gallery"
+               
+                    `${API_BASE_URL}/gallery`
             );
 
             setGallery(response.data);
@@ -37,9 +39,8 @@ function Gallery() {
         if (!confirmDelete) return;
 
         try {
-
-            await axios.delete(
-                "http://localhost:5000/api/gallery/" + id
+                await axios.delete(
+                `${API_BASE_URL}/gallery/${id}`
             );
 
             alert("Gallery Deleted Successfully");
@@ -140,7 +141,7 @@ function Gallery() {
                         <td>
 
                                <img
-                                   src={`http://localhost:5000${item.image_url}`}
+                                   src={`${SERVER_URL}${item.image_url}`}
                                    alt={item.title}
                                    width="100"
                                    height="70"

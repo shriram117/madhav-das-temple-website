@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./../css/RecentGallery.css";
+import API_BASE_URL, { SERVER_URL } from "../../config/api";
 
 function RecentGallery() {
 
@@ -17,7 +18,8 @@ function RecentGallery() {
         try {
 
             const response = await axios.get(
-                "http://localhost:5000/api/gallery/recent"
+        
+                    `${API_BASE_URL}/gallery/recent`
             );
 
             setGallery(response.data);
@@ -54,7 +56,7 @@ function RecentGallery() {
                     >
 
                         <img
-                            src={`http://localhost:5000${item.image_url}`}
+                            src={`${SERVER_URL}${item.image_url}`}
                             alt={item.title}
                         />
 

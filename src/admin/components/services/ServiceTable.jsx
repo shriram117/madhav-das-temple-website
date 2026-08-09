@@ -1,15 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
-import API_BASE_URL from "../../../config/api";
+import API_BASE_URL, { SERVER_URL } from "../../../config/api";
 
 function ServiceTable({
-
-    data,
-
+    data = [],
     loadServices,
-
     editRow
-
 }) {
 
     const [search, setSearch] = useState("");
@@ -17,17 +13,13 @@ function ServiceTable({
     const deleteService = async (id) => {
 
         if (!window.confirm("Are you sure you want to delete this service?")) {
-
             return;
-
         }
 
         try {
 
             await axios.delete(
-
                 `${API_BASE_URL}/services/${id}`
-
             );
 
             alert("Service Deleted Successfully");
@@ -45,16 +37,17 @@ function ServiceTable({
 
     };
 
+    console.log("SERVICE TABLE DATA:", data);
+
     const filteredData = data.filter((item) =>
-
         item.service_name
-            .toLowerCase()
+            ?.toLowerCase()
             .includes(search.toLowerCase())
-
     );
 
     return (
-                <>
+
+        <>
 
             <div className="row mb-3">
 
@@ -83,45 +76,31 @@ function ServiceTable({
                         <tr>
 
                             <th style={{ width: "70px" }}>
-
                                 #
-
                             </th>
 
                             <th style={{ width: "120px" }}>
-
                                 Image
-
                             </th>
 
                             <th>
-
                                 Service Name
-
                             </th>
 
                             <th>
-
                                 Description
-
                             </th>
 
                             <th style={{ width: "120px" }}>
-
                                 Order
-
                             </th>
 
                             <th style={{ width: "120px" }}>
-
                                 Status
-
                             </th>
 
                             <th style={{ width: "180px" }}>
-
                                 Action
-
                             </th>
 
                         </tr>
@@ -129,141 +108,114 @@ function ServiceTable({
                     </thead>
 
                     <tbody>
-                        {
 
-                            filteredData.length > 0 ?
+                        {filteredData.length > 0 ? (
 
-                                filteredData.map((item, index) => (
+                            filteredData.map((item, index) => (
 
-                                    <tr key={item.service_id}>
+                                <tr key={item.service_id}>
 
-                                        <td>
+                                    <td>
+                                        {index + 1}
+                                    </td>
 
-                                            {index + 1}
+                                    <td>
 
-                                        </td>
+                                        {item.image_url ? (
 
-                                        <td>
+                                            <img
+                                                src={`${SERVER_URL}${item.image_url}`}
+                                                alt={item.service_name}
+                                                style={{
+                                                    width: "80px",
+                                                    height: "60px",
+                                                    objectFit: "cover",
+                                                    borderRadius: "8px"
+                                                }}
+                                            />
 
-                                            {
+                                        ) : (
 
-                                                item.image_url ?
+                                            <span className="text-muted">
+                                                No Image
+                                            </span>
 
-                                                    <img
+                                        )}
 
-                                                        src={`http://localhost:5000${item.image_url}`}
+                                    </td>
 
-                                                        alt="Service"
+                                    <td>
+                                        {item.service_name}
+                                    </td>
 
-                                                        style={{
+                                    <td>
+                                        {item.description}
+                                    </td>
 
-                                                            width: "80px",
+                                    <td>
+                                        {item.display_order}
+                                    </td>
 
-                                                            height: "60px",
+                                    <td>
 
-                                                            objectFit: "cover",
+                                        {item.status === true ? (
 
-                                                            borderRadius: "8px"
+                                            <span className="badge bg-success">
+                                                Active
+                                            </span>
 
-                                                        }}
+                                        ) : (
 
-                                                    />
+                                            <span className="badge bg-danger">
+                                                Inactive
+                                            </span>
 
-                                                    :
+                                        )}
 
-                                                    <span className="text-muted">
+                                    </td>
 
-                                                        No Image
+                                    <td>
 
-                                                    </span>
-
+                                        <button
+                                            className="btn btn-sm btn-primary me-2"
+                                            onClick={() =>
+                                                editRow(item)
                                             }
-
-                                        </td>
-
-                                        <td>
-
-                                            {item.service_name}
-
-                                        </td>
-
-                                        <td>
-
-                                            {item.description}
-
-                                        </td>
-
-                                        <td>
-
-                                            {item.display_order}
-
-                                        </td>
-
-                                        <td>
-
-                                            {
-
-                                                item.status ?
-
-                                                    <span className="badge bg-success">
-
-                                                        Active
-
-                                                    </span>
-
-                                                    :
-
-                                                    <span className="badge bg-danger">
-
-                                                        Inactive
-
-                                                    </span>
-
-                                            }
-
-                                        </td>
-
-                                        <td>
-                                            <button
-                                                className="btn btn-sm btn-primary me-2"
-                                                onClick={() => editRow(item)}
-                                            >
-                                                ✏ Edit
-                                            </button>
-
-                                            <button
-                                                className="btn btn-sm btn-danger"
-                                                onClick={() => deleteService(item.service_id)}
-                                            >
-                                                🗑 Delete
-                                            </button>
-
-                                        </td>
-
-                                    </tr>
-
-                                ))
-
-                                :
-
-                                (
-
-                                    <tr>
-
-                                        <td
-                                            colSpan="7"
-                                            className="text-center text-muted"
                                         >
+                                            ✏️ Edit
+                                        </button>
 
-                                            No Services Found
+                                        <button
+                                            className="btn btn-sm btn-danger"
+                                            onClick={() =>
+                                                deleteService(
+                                                    item.service_id
+                                                )
+                                            }
+                                        >
+                                            🗑️ Delete
+                                        </button>
 
-                                        </td>
+                                    </td>
 
-                                    </tr>
+                                </tr>
 
-                                )
+                            ))
 
-                        }
+                        ) : (
+
+                            <tr>
+
+                                <td
+                                    colSpan="7"
+                                    className="text-center text-muted"
+                                >
+                                    No Services Found
+                                </td>
+
+                            </tr>
+
+                        )}
 
                     </tbody>
 
@@ -274,7 +226,6 @@ function ServiceTable({
         </>
 
     );
-
 }
 
 export default ServiceTable;

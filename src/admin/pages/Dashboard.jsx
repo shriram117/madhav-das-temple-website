@@ -6,6 +6,7 @@ import DashboardCards from "../components/DashboardCards";
 import RecentGallery from "../components/RecentGallery";
 import UpcomingEvents from "../components/UpcomingEvents";
 import QuickActions from "../components/QuickActions";
+import API_BASE_URL from "../../config/api";
 function Dashboard() {
 
     const [dashboard, setDashboard] = useState({
@@ -22,7 +23,7 @@ function Dashboard() {
         try {
 
             const response = await axios.get(
-                "http://localhost:5000/api/dashboard"
+                `${API_BASE_URL}/dashboard`
             );
 
             setDashboard({

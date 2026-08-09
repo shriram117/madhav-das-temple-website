@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import API_BASE_URL from "../../../config/api";
-
+///import API_BASE_URL from "../../../config/api";
+import API_BASE_URL, { SERVER_URL } from "../../../config/api";
 function ServiceForm({
 
     editData,
@@ -271,7 +271,7 @@ function ServiceForm({
                                 <br />
 
                                 <img
-                                    src={`http://localhost:5000${oldImage}`}
+                                                                        src={`${SERVER_URL}${oldImage}`}
                                     alt="Service"
                                     className="img-thumbnail"
                                     style={{

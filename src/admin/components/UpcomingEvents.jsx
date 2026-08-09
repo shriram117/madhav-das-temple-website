@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./../css/UpcomingEvents.css";
-
+import API_BASE_URL from "../../config/api";
 function UpcomingEvents() {
 
     const [events, setEvents] = useState([]);
@@ -11,7 +11,7 @@ function UpcomingEvents() {
         try {
 
             const response = await axios.get(
-                "http://localhost:5000/api/events/upcoming"
+               `${API_BASE_URL}/events/upcoming`
             );
 
             setEvents(response.data);

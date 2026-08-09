@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AdminLayout from "../components/AdminLayout";
 import EventForm from "../components/EventForm";
-
+import API_BASE_URL, { SERVER_URL } from "../../config/api";
 function Events() {
 
     const [showForm, setShowForm] = useState(false);
@@ -14,7 +14,7 @@ function Events() {
         try {
 
             const response = await axios.get(
-                "http://localhost:5000/api/events"
+                `${API_BASE_URL}/events`
             );
 
             setEvents(response.data);
@@ -49,7 +49,7 @@ function Events() {
         try {
 
             await axios.delete(
-                `http://localhost:5000/api/events/${id}`
+                `${API_BASE_URL}/events/${id}`
             );
 
             alert("Event Deleted Successfully");
@@ -136,7 +136,7 @@ function Events() {
                                         item.image_url ?
 
                                             <img
-                                                src={`http://localhost:5000${item.image_url}`}
+                                                src={`${SERVER_URL}${item.image_url}`}
                                                 width="90"
                                                 height="60"
                                                 style={{
