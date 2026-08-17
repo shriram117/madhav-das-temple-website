@@ -29,6 +29,8 @@ const allowedOrigins = [
     "http://localhost:5174",
     "https://madhav-das-temple-website.vercel.app",
     "https://madhav-das-temple-website-kfc2.vercel.app"
+    "https://1008madhavdasji.com",
+    "https://www.1008madhavdasji.com"
 ];
 
 app.use(
