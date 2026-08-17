@@ -28,7 +28,7 @@ const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:5174",
     "https://madhav-das-temple-website.vercel.app",
-    "https://madhav-das-temple-website-kfc2.vercel.app"
+    "https://madhav-das-temple-website-kfc2.vercel.app",
     "https://1008madhavdasji.com",
     "https://www.1008madhavdasji.com"
 ];
@@ -37,8 +37,6 @@ app.use(
     cors({
         origin: function (origin, callback) {
 
-            // Allow requests without an Origin
-            // Example: Postman, PowerShell, server-to-server
             if (!origin) {
                 return callback(null, true);
             }
@@ -71,7 +69,6 @@ app.use(
         ]
     })
 );
-
 
 // ======================================================
 // BODY PARSER
