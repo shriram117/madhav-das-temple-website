@@ -1,76 +1,155 @@
+/* =========================================
+   SIDEBAR
+========================================= */
+
 .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 250px;
     height: 100vh;
     background: #1f2937;
-    color: white;
-    position: fixed;
-    left: 0;
-    top: 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    box-shadow: 3px 0 10px rgba(0,0,0,.15);
+    z-index: 1000;
+    overflow: hidden;
 }
 
+
+/* =========================================
+   LOGO
+========================================= */
+
 .sidebar-logo {
-    padding: 25px 20px;
-    text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,.1);
+    height: 70px;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px;
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
     .sidebar-logo h4 {
-        margin-top: 10px;
-        margin-bottom: 0;
-        font-weight: bold;
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
     }
+
+
+/* =========================================
+   MENU SCROLL AREA
+========================================= */
 
 .sidebar ul {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 15px 0;
     list-style: none;
-    padding: 0;
-    margin: 20px 0;
 }
 
-    .sidebar ul li {
-        margin: 6px 12px;
+
+    /* Scrollbar */
+
+    .sidebar ul::-webkit-scrollbar {
+        width: 6px;
     }
 
-        .sidebar ul li a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            transition: .3s;
-            font-size: 16px;
+    .sidebar ul::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sidebar ul::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.3);
+        border-radius: 10px;
+    }
+
+        .sidebar ul::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.5);
         }
 
-            .sidebar ul li a:hover {
-                background: #374151;
-            }
 
-        .sidebar ul li.active a {
-            background: #f59e0b;
-            color: #fff;
+/* =========================================
+   MENU ITEM
+========================================= */
+
+.sidebar li {
+    margin: 4px 10px;
+}
+
+    .sidebar li a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 15px;
+        color: #d1d5db;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: all 0.2s ease;
+    }
+
+
+        /* Icon */
+
+        .sidebar li a span {
+            width: 25px;
+            text-align: center;
+            font-size: 18px;
         }
+
+
+        /* Hover */
+
+        .sidebar li a:hover {
+            background: rgba(255,255,255,0.08);
+            color: #ffffff;
+        }
+
+
+    /* Active */
+
+    .sidebar li.active a {
+        background: #f59e0b;
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+
+/* =========================================
+   LOGOUT
+========================================= */
 
 .logout {
-    padding: 20px;
-    border-top: 1px solid rgba(255,255,255,.1);
+    flex-shrink: 0;
+    padding: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    background: #1f2937;
 }
 
     .logout a {
         display: block;
+        padding: 10px 15px;
+        color: #ffffff;
         text-decoration: none;
-        color: white;
-        padding: 12px;
         border-radius: 8px;
-        background: #dc2626;
-        text-align: center;
-        transition: .3s;
     }
 
         .logout a:hover {
-            background: #b91c1c;
+            background: rgba(255,255,255,0.08);
         }
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 220px;
+    }
+}

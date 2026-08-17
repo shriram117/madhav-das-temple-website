@@ -1,14 +1,15 @@
 import "./Gallery.css";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import API_BASE_URL from "../../config/api";
+import api from "../../config/axios";
 import Lightbox from "./Lightbox";
 import { getImageUrl } from "../../utils/imageUrl";
+
 function Gallery() {
 
     const [gallery, setGallery] = useState([]);
 
     const [selectedIndex, setSelectedIndex] = useState(null);
+
 
     useEffect(() => {
 
@@ -16,13 +17,12 @@ function Gallery() {
 
     }, []);
 
+
     const loadGallery = async () => {
 
         try {
 
-            const response = await axios.get(
-                `${API_BASE_URL}/gallery`
-            );
+            const response = await api.get("/gallery");
 
             const activeGallery = response.data.filter(
                 item => item.status === true
@@ -33,11 +33,12 @@ function Gallery() {
         }
         catch (err) {
 
-            console.log(err);
+            console.log("Gallery Load Error:", err);
 
         }
 
     };
+
 
     const openImage = (index) => {
 
@@ -45,31 +46,31 @@ function Gallery() {
 
     };
 
+
     const closeImage = () => {
 
         setSelectedIndex(null);
 
     };
 
+
     const nextImage = () => {
 
         setSelectedIndex(
-
             (selectedIndex + 1) % gallery.length
-
         );
 
     };
+
 
     const prevImage = () => {
 
         setSelectedIndex(
-
             (selectedIndex - 1 + gallery.length) % gallery.length
-
         );
 
     };
+
 
     return (
 
@@ -82,15 +83,13 @@ function Gallery() {
             <div className="container">
 
                 <h2 className="text-center mb-5">
-
                     Temple Gallery
-
                 </h2>
+
 
                 <div className="gallery-grid">
 
                     {
-
                         gallery.slice(0, 6).map((item, index) => (
 
                             <div
@@ -100,40 +99,39 @@ function Gallery() {
                             >
 
                                 <img
-
                                     src={getImageUrl(item.image_url)}
-
                                     alt={item.title}
-
                                 />
 
                             </div>
 
                         ))
-
                     }
 
                 </div>
 
+
                 <div className="text-center mt-5">
 
                     <button className="gallery-btn">
-
                         View All Photos
-
                     </button>
 
                 </div>
 
             </div>
 
-            {
 
+            {
                 selectedIndex !== null && (
 
                     <Lightbox
 
-                        image={getImageUrl(gallery[selectedIndex].image_url)}
+                        image={
+                            getImageUrl(
+                                gallery[selectedIndex].image_url
+                            )
+                        }
 
                         onClose={closeImage}
 
@@ -144,7 +142,6 @@ function Gallery() {
                     />
 
                 )
-
             }
 
         </section>

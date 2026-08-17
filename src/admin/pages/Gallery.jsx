@@ -1,35 +1,55 @@
 import AdminLayout from "../components/AdminLayout";
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import "../css/Gallery.css";
+
 import GalleryForm from "../components/GalleryForm";
-import API_BASE_URL, { SERVER_URL } from "../../config/api";
+
+import api from "../../config/axios";
+
+import { SERVER_URL } from "../../config/api";
+
+
 function Gallery() {
 
     const [gallery, setGallery] = useState([]);
+
     const [editData, setEditData] = useState(null);
+
     const [showForm, setShowForm] = useState(false);
+
+
+    // =========================================
+    // LOAD GALLERY
+    // =========================================
 
     const loadGallery = async () => {
 
         try {
 
-            const response = await axios.get(
-               
-                    `${API_BASE_URL}/gallery`
-            );
+            const response = await api.get("/gallery");
 
             setGallery(response.data);
 
-        } catch (error) {
+        }
+        catch (error) {
 
-            console.log(error);
+            console.log("Gallery Load Error:", error);
 
-            alert("Unable to load gallery.");
+            alert(
+                error.response?.data?.message ||
+                "Unable to load gallery."
+            );
 
         }
 
     };
+
+
+    // =========================================
+    // DELETE GALLERY
+    // =========================================
+
     const deleteGallery = async (id) => {
 
         const confirmDelete = window.confirm(
@@ -38,24 +58,33 @@ function Gallery() {
 
         if (!confirmDelete) return;
 
+
         try {
-                await axios.delete(
-                `${API_BASE_URL}/gallery/${id}`
-            );
+
+            await api.delete(`/gallery/${id}`);
 
             alert("Gallery Deleted Successfully");
 
-            loadGallery();
+            await loadGallery();
 
-        } catch (err) {
+        }
+        catch (err) {
 
-            console.error(err);
+            console.error("Delete Gallery Error:", err);
 
-            alert(err.response?.data?.message || "Delete Failed");
+            alert(
+                err.response?.data?.message ||
+                "Delete Failed"
+            );
 
         }
 
     };
+
+
+    // =========================================
+    // EDIT GALLERY
+    // =========================================
 
     const editGallery = (item) => {
 
@@ -65,20 +94,35 @@ function Gallery() {
 
     };
 
+
+    // =========================================
+    // LOAD ON PAGE OPEN
+    // =========================================
+
     useEffect(() => {
 
         loadGallery();
 
     }, []);
 
+
     return (
 
         <AdminLayout>
-        <div className="gallery-page">
 
-            <div className="gallery-header">
+            <div className="gallery-page">
 
-                <h2>🖼 Gallery Management</h2>
+
+                {/* =====================================
+                    HEADER
+                ===================================== */}
+
+                <div className="gallery-header">
+
+                    <h2>
+                        🖼 Gallery Management
+                    </h2>
+
 
                     <button
                         className="btn btn-primary"
@@ -90,17 +134,31 @@ function Gallery() {
 
                         }}
                     >
-                        {showForm ? "Close Form" : "+ Add Image"}
+
+                        {
+                            showForm
+                                ? "Close Form"
+                                : "+ Add Image"
+                        }
+
                     </button>
 
-            </div>
+                </div>
+
+
+                {/* =====================================
+                    FORM
+                ===================================== */}
 
                 {
                     showForm && (
 
                         <GalleryForm
+
                             loadGallery={loadGallery}
+
                             editData={editData}
+
                             closeForm={() => {
 
                                 setShowForm(false);
@@ -108,107 +166,184 @@ function Gallery() {
                                 setEditData(null);
 
                             }}
+
                         />
 
                     )
                 }
-            <table className="table table-bordered table-striped">
 
-                <thead>
 
-                    <tr>
+                {/* =====================================
+                    TABLE
+                ===================================== */}
 
-                        <th>ID</th>
-                        <th>Preview</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Category</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                <table className="table table-bordered table-striped">
 
-                    </tr>
+                    <thead>
 
-                </thead>
+                        <tr>
 
-                <tbody>
-                    {
-                   gallery.map((item) => (
+                            <th>ID</th>
 
-                    <tr key={item.gallery_id}>
+                            <th>Preview</th>
 
-                        <td>{item.gallery_id}</td>
+                            <th>Title</th>
 
-                        <td>
+                            <th>Description</th>
 
-                               <img
-                                   src={`${SERVER_URL}${item.image_url}`}
-                                   alt={item.title}
-                                   width="100"
-                                   height="70"
-                                   style={{
-                                       objectFit: "cover",
-                                       borderRadius: "8px",
-                                       border: "1px solid #ddd"
-                                   }}
-                                   onError={(e) => {
-                                       console.log("Image URL:", e.target.src);
-                                       e.target.src = "https://via.placeholder.com/100x70?text=No+Image";
-                                   }}
-                               />
+                            <th>Category</th>
 
-                        </td>
+                            <th>Status</th>
 
-                        <td>{item.title}</td>
+                            <th>Action</th>
 
-                        <td>{item.description}</td>
+                        </tr>
 
-                        <td>{item.category}</td>
+                    </thead>
 
-                        <td>
-                            <span
-                                className={
-                                    item.status
-                                        ? "status-active"
-                                        : "status-inactive"
-                                }
-                            >
-                                {item.status ? "Active" : "Inactive"}
-                            </span>
-                        </td>
 
-                        <td>
+                    <tbody>
 
-                               <button
-                                   className="btn btn-warning btn-sm me-2"
-                                   onClick={() => editGallery(item)}
-                               >
-                                   Edit
-                               </button>
+                        {
 
-                               <button
-                                   className="btn btn-danger btn-sm"
-                                   onClick={() => deleteGallery(item.gallery_id)}
-                               >
-                                   Delete
-                               </button>
+                            gallery.map((item) => (
 
-                        </td>
+                                <tr
+                                    key={item.gallery_id}
+                                >
 
-                    </tr>
+                                    <td>
+                                        {item.gallery_id}
+                                    </td>
 
-                    ))
 
-                    }
+                                    <td>
 
-                </tbody>
+                                        <img
 
-            </table>
+                                            src={
+                                                `${SERVER_URL}${item.image_url}`
+                                            }
+
+                                            alt={item.title}
+
+                                            width="100"
+
+                                            height="70"
+
+                                            style={{
+                                                objectFit: "cover",
+                                                borderRadius: "8px",
+                                                border: "1px solid #ddd"
+                                            }}
+
+                                            onError={(e) => {
+
+                                                console.log(
+                                                    "Image URL:",
+                                                    e.target.src
+                                                );
+
+                                                e.target.src =
+                                                    "https://via.placeholder.com/100x70?text=No+Image";
+
+                                            }}
+
+                                        />
+
+                                    </td>
+
+
+                                    <td>
+                                        {item.title}
+                                    </td>
+
+
+                                    <td>
+                                        {item.description}
+                                    </td>
+
+
+                                    <td>
+                                        {item.category}
+                                    </td>
+
+
+                                    <td>
+
+                                        <span
+
+                                            className={
+                                                item.status
+                                                    ? "status-active"
+                                                    : "status-inactive"
+                                            }
+
+                                        >
+
+                                            {
+                                                item.status
+                                                    ? "Active"
+                                                    : "Inactive"
+                                            }
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <button
+
+                                            className="btn btn-warning btn-sm me-2"
+
+                                            onClick={() =>
+                                                editGallery(item)
+                                            }
+
+                                        >
+
+                                            Edit
+
+                                        </button>
+
+
+                                        <button
+
+                                            className="btn btn-danger btn-sm"
+
+                                            onClick={() =>
+                                                deleteGallery(
+                                                    item.gallery_id
+                                                )
+                                            }
+
+                                        >
+
+                                            Delete
+
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+
+                            ))
+
+                        }
+
+                    </tbody>
+
+                </table>
 
             </div>
+
         </AdminLayout>
 
     );
 
 }
+
 
 export default Gallery;

@@ -12,7 +12,8 @@ import LiveDarshan from "../components/LiveDarshan/LiveDarshan";
 import Statistics from "../components/Statistics/Statistics";
 import UpcomingEvents from "../components/UpcomingEvents/UpcomingEvents";
 import ScrollTop from "../components/ScrollTop/ScrollTop";
-
+import NoticeBoard from "../components/NoticeBoard/NoticeBoard";
+import MemberDetails from "../components/MemberDetails/MemberDetails";
 function TempleWebsite() {
 
     return (
@@ -26,8 +27,10 @@ function TempleWebsite() {
             <AboutTemple />
             <Statistics />
             <UpcomingEvents />
+            <NoticeBoard />
             <DailyAarti />
             <TempleServices />
+            <MemberDetails />
             <Gallery />
             <Donation />
             <Contact />

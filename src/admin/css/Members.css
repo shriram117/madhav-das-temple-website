@@ -1,0 +1,61 @@
+.members-page {
+    width: 100%;
+}
+
+.members-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+    .members-header h2 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+.members-page table {
+    background: #ffffff;
+}
+
+.members-page th {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.members-page td {
+    vertical-align: middle;
+}
+
+.status-active {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: #d4edda;
+    color: #155724;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-inactive {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: #f8d7da;
+    color: #721c24;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+
+    .members-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+        .members-header button {
+            width: 100%;
+        }
+}

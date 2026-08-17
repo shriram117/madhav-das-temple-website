@@ -1,11 +1,16 @@
 const pool = require("../config/db");
 
+
+// =====================================================
 // Get All Users
+// =====================================================
+
 const getAllUsers = async (req, res) => {
 
     try {
 
         const result = await pool.query(
+
             `SELECT
                 user_id,
                 full_name,
@@ -13,9 +18,11 @@ const getAllUsers = async (req, res) => {
                 email,
                 mobile_no,
                 role,
-                status
+                status,
+                permissions
              FROM users
              ORDER BY user_id DESC`
+
         );
 
         res.json(result.rows);
@@ -35,7 +42,13 @@ const getAllUsers = async (req, res) => {
     }
 
 };
+
+
+
+// =====================================================
 // Update User
+// =====================================================
+
 const updateUser = async (req, res) => {
 
     try {
@@ -49,10 +62,27 @@ const updateUser = async (req, res) => {
             mobile_no,
             password,
             role,
-            status
+            status,
+            permissions
         } = req.body;
 
-        if (password && password.trim() !== "") {
+
+        // ---------------------------------------------
+        // Ensure permissions is JSON object
+        // ---------------------------------------------
+
+        const userPermissions =
+            permissions || {};
+
+
+        // ---------------------------------------------
+        // Password provided
+        // ---------------------------------------------
+
+        if (
+            password &&
+            password.trim() !== ""
+        ) {
 
             await pool.query(
 
@@ -65,8 +95,9 @@ const updateUser = async (req, res) => {
                     password=$5,
                     role=$6,
                     status=$7,
+                    permissions=$8::jsonb,
                     modified_on=NOW()
-                 WHERE user_id=$8`,
+                 WHERE user_id=$9`,
 
                 [
                     full_name,
@@ -76,12 +107,20 @@ const updateUser = async (req, res) => {
                     password,
                     role,
                     status,
+                    JSON.stringify(userPermissions),
                     id
                 ]
 
             );
 
-        } else {
+        }
+
+
+        // ---------------------------------------------
+        // Password NOT provided
+        // ---------------------------------------------
+
+        else {
 
             await pool.query(
 
@@ -93,8 +132,9 @@ const updateUser = async (req, res) => {
                     mobile_no=$4,
                     role=$5,
                     status=$6,
+                    permissions=$7::jsonb,
                     modified_on=NOW()
-                 WHERE user_id=$7`,
+                 WHERE user_id=$8`,
 
                 [
                     full_name,
@@ -103,12 +143,14 @@ const updateUser = async (req, res) => {
                     mobile_no,
                     role,
                     status,
+                    JSON.stringify(userPermissions),
                     id
                 ]
 
             );
 
         }
+
 
         res.json({
 
@@ -133,7 +175,12 @@ const updateUser = async (req, res) => {
 
 };
 
+
+
+// =====================================================
 // Add User
+// =====================================================
+
 const addUser = async (req, res) => {
 
     try {
@@ -144,8 +191,15 @@ const addUser = async (req, res) => {
             email,
             password,
             mobile_no,
-            role
+            role,
+            status,
+            permissions
         } = req.body;
+
+
+        const userPermissions =
+            permissions || {};
+
 
         await pool.query(
 
@@ -156,10 +210,13 @@ const addUser = async (req, res) => {
                 email,
                 password,
                 mobile_no,
-                role
+                role,
+                status,
+                permissions,
+                created_on
             )
             VALUES
-            ($1,$2,$3,$4,$5,$6)`,
+            ($1,$2,$3,$4,$5,$6,$7,$8::jsonb,NOW())`,
 
             [
                 full_name,
@@ -167,10 +224,13 @@ const addUser = async (req, res) => {
                 email,
                 password,
                 mobile_no,
-                role
+                role,
+                status ?? true,
+                JSON.stringify(userPermissions)
             ]
 
         );
+
 
         res.json({
 
@@ -195,17 +255,27 @@ const addUser = async (req, res) => {
 
 };
 
+
+
+// =====================================================
 // Delete User
+// =====================================================
+
 const deleteUser = async (req, res) => {
 
     try {
 
         const { id } = req.params;
 
+
         await pool.query(
+
             "DELETE FROM users WHERE user_id=$1",
+
             [id]
+
         );
+
 
         res.json({
 
@@ -229,6 +299,13 @@ const deleteUser = async (req, res) => {
     }
 
 };
+
+
+
+// =====================================================
+// Export
+// =====================================================
+
 module.exports = {
 
     getAllUsers,

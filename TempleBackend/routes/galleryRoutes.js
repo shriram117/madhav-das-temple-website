@@ -3,6 +3,9 @@ const router = express.Router();
 
 const upload = require("../config/galleryUpload");
 
+const authenticateToken = require("../middleware/authMiddleware");
+const checkPermission = require("../middleware/permissionMiddleware");
+
 const {
     getAllGallery,
     getRecentGallery,
@@ -11,14 +14,44 @@ const {
     deleteGallery
 } = require("../controllers/galleryController");
 
-router.get("/recent", getRecentGallery);
 
-router.get("/", getAllGallery);
+// Public
+router.get(
+    "/recent",
+    getRecentGallery
+);
 
-router.post("/", upload.single("image"), addGallery);
 
-router.put("/:id", upload.single("image"), updateGallery);
+// Protected
+router.get(
+    "/",
+    authenticateToken,
+    checkPermission("gallery"),
+    getAllGallery
+);
 
-router.delete("/:id", deleteGallery);
+router.post(
+    "/",
+    authenticateToken,
+    checkPermission("gallery"),
+    upload.single("image"),
+    addGallery
+);
+
+router.put(
+    "/:id",
+    authenticateToken,
+    checkPermission("gallery"),
+    upload.single("image"),
+    updateGallery
+);
+
+router.delete(
+    "/:id",
+    authenticateToken,
+    checkPermission("gallery"),
+    deleteGallery
+);
+
 
 module.exports = router;

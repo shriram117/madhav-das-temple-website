@@ -9,7 +9,7 @@ function Users() {
     const [users, setUsers] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [editData, setEditData] = useState(null);
-
+    const [permissionUser, setPermissionUser] = useState(null);
     const loadUsers = async () => {
 
         try {
@@ -123,6 +123,7 @@ function Users() {
                         <th>Mobile</th>
                         <th>Role</th>
                         <th>Status</th>
+                        <th>Permissions</th>
                         <th>Action</th>
 
                     </tr>
@@ -143,6 +144,16 @@ function Users() {
                                 <td>{item.mobile_no}</td>
                                 <td>{item.role}</td>
 
+                                <td>
+
+                                    <button
+                                        className="btn btn-info btn-sm me-2"
+                                        onClick={() => setPermissionUser(item)}
+                                    >
+                                        Permissions
+                                    </button>
+
+                                </td>
                                 <td>
                                     {
                                         item.status

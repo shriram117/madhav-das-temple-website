@@ -14,7 +14,9 @@ const userRoutes = require("./routes/userRoutes");
 const settingsRoutes = require("./routes/settingsRoutes");
 const aartiRoutes = require("./routes/aartiRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
-
+const noticeRoutes = require("./routes/noticeRoutes");
+const memberRoutes = require("./routes/memberRoutes");
+const donationRoutes = require("./routes/donationRoutes");
 const app = express();
 
 
@@ -108,6 +110,11 @@ app.use("/api/aarti", aartiRoutes);
 
 app.use("/api/services", serviceRoutes);
 
+app.use("/api/notices", noticeRoutes);
+
+app.use("/api/members", memberRoutes);
+
+app.use("/api/donations", donationRoutes);
 
 // ======================================================
 // TEST POSTGRESQL CONNECTION
