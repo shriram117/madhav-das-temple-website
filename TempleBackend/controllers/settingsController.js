@@ -1,7 +1,133 @@
 const pool = require("../config/db");
 const cloudinary = require("../config/cloudinary");
+
 const fs = require("fs");
 const path = require("path");
+
+
+// ============================================
+// CLOUDINARY DELETE HELPER
+// ============================================
+
+const deleteFromCloudinary = async (imageUrl) => {
+
+    try {
+
+        if (
+            !imageUrl ||
+            !imageUrl.includes("res.cloudinary.com")
+        ) {
+            return;
+        }
+
+        const url = new URL(imageUrl);
+
+        const parts = url.pathname.split("/");
+
+        const uploadIndex = parts.indexOf("upload");
+
+        if (uploadIndex === -1) {
+            return;
+        }
+
+        let publicIdParts =
+            parts.slice(uploadIndex + 1);
+
+        // Remove version: v1234567890
+        if (
+            publicIdParts[0] &&
+            /^v\d+$/.test(publicIdParts[0])
+        ) {
+            publicIdParts.shift();
+        }
+
+        let publicId =
+            publicIdParts.join("/");
+
+        // Remove extension
+        publicId =
+            publicId.replace(
+                /\.[^/.]+$/,
+                ""
+            );
+
+        console.log(
+            "Deleting Cloudinary image:",
+            publicId
+        );
+
+        await cloudinary.uploader.destroy(
+            publicId,
+            {
+                resource_type: "image"
+            }
+        );
+
+        console.log(
+            "Cloudinary image deleted:",
+            publicId
+        );
+
+    }
+    catch (err) {
+
+        console.error(
+            "Cloudinary delete error:",
+            err.message
+        );
+
+    }
+
+};
+
+
+// ============================================
+// CLOUDINARY UPLOAD HELPER
+// ============================================
+
+const uploadToCloudinary = (file) => {
+
+    return new Promise((resolve, reject) => {
+
+        const uploadStream =
+            cloudinary.uploader.upload_stream(
+
+                {
+                    folder:
+                        "madhavdasji/settings",
+
+                    resource_type:
+                        "image"
+                },
+
+                (error, result) => {
+
+                    if (error) {
+
+                        console.error(
+                            "Cloudinary upload error:",
+                            error
+                        );
+
+                        reject(error);
+
+                        return;
+                    }
+
+                    resolve(result);
+
+                }
+
+            );
+
+
+        uploadStream.end(
+            file.buffer
+        );
+
+    });
+
+};
 
 
 // ============================================
@@ -13,31 +139,49 @@ const getSettings = async (req, res) => {
     try {
 
         const result = await pool.query(
+
             `SELECT *
              FROM temple_settings
              ORDER BY setting_id
              LIMIT 1`
+
         );
+
 
         if (result.rows.length === 0) {
 
             return res.status(404).json({
+
                 success: false,
-                message: "Temple settings not found"
+
+                message:
+                    "Temple settings not found"
+
             });
 
         }
 
-        res.json(result.rows[0]);
+
+        res.json(
+            result.rows[0]
+        );
 
     }
     catch (err) {
 
-        console.error("GET SETTINGS ERROR:", err);
+        console.error(
+            "GET SETTINGS ERROR:",
+            err
+        );
+
 
         res.status(500).json({
+
             success: false,
-            message: err.message
+
+            message:
+                err.message
+
         });
 
     }
@@ -53,52 +197,76 @@ const updateSettings = async (req, res) => {
 
     try {
 
-        console.log("=================================");
-        console.log("UPDATE SETTINGS");
-        console.log("NODE_ENV:", process.env.NODE_ENV);
-        console.log("BODY:", req.body);
-        console.log("FILES:", req.files);
-        console.log("=================================");
-
-
-        // --------------------------------------------
-        // GET ACTUAL SETTINGS RECORD
-        // --------------------------------------------
-
-        const settingResult = await pool.query(
-
-            `SELECT
-                setting_id,
-                temple_logo,
-                temple_banner
-             FROM temple_settings
-             ORDER BY setting_id
-             LIMIT 1`
-
+        console.log(
+            "================================="
         );
+
+        console.log(
+            "UPDATE SETTINGS"
+        );
+
+        console.log(
+            "NODE_ENV:",
+            process.env.NODE_ENV
+        );
+
+        console.log(
+            "BODY:",
+            req.body
+        );
+
+        console.log(
+            "FILES:",
+            req.files
+        );
+
+        console.log(
+            "================================="
+        );
+
+
+        // ========================================
+        // GET CURRENT SETTINGS
+        // ========================================
+
+        const settingResult =
+            await pool.query(
+
+                `SELECT
+                    setting_id,
+                    temple_logo,
+                    temple_banner
+                 FROM temple_settings
+                 ORDER BY setting_id
+                 LIMIT 1`
+
+            );
 
 
         if (settingResult.rows.length === 0) {
 
             return res.status(404).json({
+
                 success: false,
-                message: "Temple settings record not found"
+
+                message:
+                    "Temple settings record not found"
+
             });
 
         }
 
 
-        const currentSettings = settingResult.rows[0];
+        const currentSettings =
+            settingResult.rows[0];
 
-        const settingId = currentSettings.setting_id;
+        const settingId =
+            currentSettings.setting_id;
 
 
-        console.log("SETTING ID:", settingId);
-
-
-        // --------------------------------------------
+        // ========================================
         // FORM DATA
-        // --------------------------------------------
+        // ========================================
 
         const {
 
@@ -121,9 +289,9 @@ const updateSettings = async (req, res) => {
         } = req.body;
 
 
-        // --------------------------------------------
-        // KEEP OLD IMAGE
-        // --------------------------------------------
+        // ========================================
+        // KEEP OLD IMAGES
+        // ========================================
 
         let temple_logo =
             currentSettings.temple_logo || "";
@@ -132,53 +300,59 @@ const updateSettings = async (req, res) => {
             currentSettings.temple_banner || "";
 
 
-        // ============================================
+        // ========================================
         // TEMPLE LOGO
-        // ============================================
+        // ========================================
 
-        if (req.files?.temple_logo?.[0]) {
+        if (
+            req.files?.temple_logo?.[0]
+        ) {
 
-            const file = req.files.temple_logo[0];
+            const file =
+                req.files.temple_logo[0];
+
 
             console.log(
-                "LOGO FILE:",
-                file.originalname
+                "Uploading temple logo..."
             );
 
 
-            // ========================================
+            // ------------------------------------
             // PRODUCTION
-            // ========================================
+            // ------------------------------------
 
-            if (process.env.NODE_ENV === "production") {
+            if (
+                process.env.NODE_ENV ===
+                "production"
+            ) {
 
                 const result =
-                    await cloudinary.uploader.upload(
-
-                        `data:${file.mimetype};base64,${file.buffer.toString("base64")}`,
-
-                        {
-                            folder: "madhavdasji/settings",
-                            resource_type: "image"
-                        }
-
+                    await uploadToCloudinary(
+                        file
                     );
 
 
-                temple_logo = result.secure_url;
+                temple_logo =
+                    result.secure_url;
 
 
                 console.log(
-                    "CLOUDINARY LOGO:",
+                    "New Cloudinary Logo:",
                     temple_logo
+                );
+
+
+                // Delete old image
+                await deleteFromCloudinary(
+                    currentSettings.temple_logo
                 );
 
             }
 
 
-            // ========================================
+            // ------------------------------------
             // LOCAL
-            // ========================================
+            // ------------------------------------
 
             else {
 
@@ -189,7 +363,9 @@ const updateSettings = async (req, res) => {
                     );
 
 
-                if (!fs.existsSync(uploadDir)) {
+                if (
+                    !fs.existsSync(uploadDir)
+                ) {
 
                     fs.mkdirSync(
                         uploadDir,
@@ -204,8 +380,13 @@ const updateSettings = async (req, res) => {
                 const fileName =
                     Date.now() +
                     "-" +
-                    Math.round(Math.random() * 1E9) +
-                    path.extname(file.originalname);
+                    Math.round(
+                        Math.random() *
+                        1E9
+                    ) +
+                    path.extname(
+                        file.originalname
+                    );
 
 
                 const filePath =
@@ -227,7 +408,7 @@ const updateSettings = async (req, res) => {
 
 
                 console.log(
-                    "LOCAL LOGO:",
+                    "Local Logo:",
                     temple_logo
                 );
 
@@ -236,38 +417,35 @@ const updateSettings = async (req, res) => {
         }
 
 
-        // ============================================
+        // ========================================
         // TEMPLE BANNER
-        // ============================================
+        // ========================================
 
-        if (req.files?.temple_banner?.[0]) {
+        if (
+            req.files?.temple_banner?.[0]
+        ) {
 
             const file =
                 req.files.temple_banner[0];
 
 
             console.log(
-                "BANNER FILE:",
-                file.originalname
+                "Uploading temple banner..."
             );
 
 
-            // ========================================
+            // ------------------------------------
             // PRODUCTION
-            // ========================================
+            // ------------------------------------
 
-            if (process.env.NODE_ENV === "production") {
+            if (
+                process.env.NODE_ENV ===
+                "production"
+            ) {
 
                 const result =
-                    await cloudinary.uploader.upload(
-
-                        `data:${file.mimetype};base64,${file.buffer.toString("base64")}`,
-
-                        {
-                            folder: "madhavdasji/settings",
-                            resource_type: "image"
-                        }
-
+                    await uploadToCloudinary(
+                        file
                     );
 
 
@@ -276,16 +454,22 @@ const updateSettings = async (req, res) => {
 
 
                 console.log(
-                    "CLOUDINARY BANNER:",
+                    "New Cloudinary Banner:",
                     temple_banner
+                );
+
+
+                // Delete old image
+                await deleteFromCloudinary(
+                    currentSettings.temple_banner
                 );
 
             }
 
 
-            // ========================================
+            // ------------------------------------
             // LOCAL
-            // ========================================
+            // ------------------------------------
 
             else {
 
@@ -296,7 +480,9 @@ const updateSettings = async (req, res) => {
                     );
 
 
-                if (!fs.existsSync(uploadDir)) {
+                if (
+                    !fs.existsSync(uploadDir)
+                ) {
 
                     fs.mkdirSync(
                         uploadDir,
@@ -311,8 +497,13 @@ const updateSettings = async (req, res) => {
                 const fileName =
                     Date.now() +
                     "-" +
-                    Math.round(Math.random() * 1E9) +
-                    path.extname(file.originalname);
+                    Math.round(
+                        Math.random() *
+                        1E9
+                    ) +
+                    path.extname(
+                        file.originalname
+                    );
 
 
                 const filePath =
@@ -334,7 +525,7 @@ const updateSettings = async (req, res) => {
 
 
                 console.log(
-                    "LOCAL BANNER:",
+                    "Local Banner:",
                     temple_banner
                 );
 
@@ -343,9 +534,9 @@ const updateSettings = async (req, res) => {
         }
 
 
-        // ============================================
+        // ========================================
         // UPDATE DATABASE
-        // ============================================
+        // ========================================
 
         const updateResult =
             await pool.query(
@@ -393,7 +584,6 @@ const updateSettings = async (req, res) => {
                     youtube_url,
                     google_map,
                     live_darshan_url,
-
                     settingId
 
                 ]
@@ -407,9 +597,9 @@ const updateSettings = async (req, res) => {
         );
 
 
-        // ============================================
+        // ========================================
         // RESPONSE
-        // ============================================
+        // ========================================
 
         res.json({
 
@@ -451,6 +641,10 @@ const updateSettings = async (req, res) => {
 
 };
 
+
+// ============================================
+// EXPORT
+// ============================================
 
 module.exports = {
 
