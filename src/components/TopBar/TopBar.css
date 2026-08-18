@@ -1,0 +1,31 @@
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #8B0000;
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 0;
+    z-index: 10000;
+}
+
+.topbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topbar-left,
+.topbar-center,
+.topbar-right {
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .topbar-container {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+    }
+}

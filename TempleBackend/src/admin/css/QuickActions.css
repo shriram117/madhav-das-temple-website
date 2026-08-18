@@ -1,0 +1,20 @@
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 15px;
+}
+
+.quick-btn {
+    color: #fff;
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-align: center;
+    transition: .3s;
+}
+
+    .quick-btn:hover {
+        transform: translateY(-3px);
+        color: #fff;
+    }

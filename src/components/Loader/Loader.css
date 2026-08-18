@@ -1,0 +1,100 @@
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg,#FFF8F2,#FFE9CC);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+}
+
+.loader-card {
+    text-align: center;
+    padding: 40px;
+}
+
+.loader-logo {
+    font-size: 90px;
+    animation: float 2s ease-in-out infinite;
+}
+
+.loader-card h2 {
+    margin-top: 15px;
+    color: #8B4513;
+    font-size: 34px;
+    font-weight: 700;
+}
+
+.loader-card p {
+    color: #555;
+    font-size: 18px;
+    margin: 20px 0;
+}
+
+.loader-bar {
+    width: 320px;
+    height: 10px;
+    background: #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 20px auto;
+}
+
+.loader-progress {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg,#E67E22,#FFD700);
+    animation: loading 2s linear forwards;
+}
+
+.loader-card span {
+    display: block;
+    margin-top: 20px;
+    color: #8B4513;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+@keyframes loading {
+
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes float {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@media(max-width:768px) {
+
+    .loader-logo {
+        font-size: 70px;
+    }
+
+    .loader-card h2 {
+        font-size: 24px;
+    }
+
+    .loader-bar {
+        width: 250px;
+    }
+}

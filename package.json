@@ -1,0 +1,28 @@
+{
+  "name": "madhav-das-ji",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "aos": "^2.3.4",
+    "axios": "^1.19.0",
+    "bootstrap": "^5.3.8",
+    "react": "^19.1.1",
+    "react-countup": "^6.5.3",
+    "react-dom": "^19.1.1",
+    "react-icons": "^5.7.0",
+    "react-intersection-observer": "^11.0.0",
+    "react-router-dom": "^7.18.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.34.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "eslint": "^9.34.0",
+    "vite": "^7.1.2"
+  }
+}

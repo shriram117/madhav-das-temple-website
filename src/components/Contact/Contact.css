@@ -1,0 +1,26 @@
+.contact-section {
+    padding: 100px 0;
+    background: #FFF8F2;
+}
+
+.contact-card {
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+    .contact-card p {
+        margin-top: 20px;
+    }
+
+.icon {
+    color: #E67E22;
+    margin-right: 10px;
+}
+
+.map-container {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}

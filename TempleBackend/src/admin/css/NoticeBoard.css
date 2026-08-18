@@ -1,0 +1,123 @@
+/* ======================================================
+   NOTICE BOARD ADMIN
+   ====================================================== */
+
+.notice-page {
+    padding: 20px;
+}
+
+
+/* ======================================================
+   HEADER
+   ====================================================== */
+
+.notice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+    .notice-header h2 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+
+/* ======================================================
+   TABLE
+   ====================================================== */
+
+.notice-page table {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.notice-page th {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.notice-page td {
+    vertical-align: middle;
+}
+
+
+    /* ======================================================
+   DESCRIPTION
+   ====================================================== */
+
+    .notice-page td:nth-child(3) {
+        min-width: 250px;
+        max-width: 350px;
+    }
+
+
+/* ======================================================
+   STATUS
+   ====================================================== */
+
+.status-active {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: #d4edda;
+    color: #155724;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-inactive {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: #f8d7da;
+    color: #721c24;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* ======================================================
+   BUTTONS
+   ====================================================== */
+
+.notice-page .btn {
+    white-space: nowrap;
+}
+
+.notice-page .btn-primary {
+    font-weight: 600;
+}
+
+
+/* ======================================================
+   MOBILE
+   ====================================================== */
+
+@media (max-width: 768px) {
+
+    .notice-page {
+        padding: 10px;
+    }
+
+    .notice-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+        .notice-header h2 {
+            font-size: 21px;
+        }
+
+        .notice-header button {
+            width: 100%;
+        }
+
+    .notice-page table {
+        font-size: 13px;
+    }
+}

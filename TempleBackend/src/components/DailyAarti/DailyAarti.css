@@ -1,0 +1,32 @@
+.aarti-section {
+    padding: 100px 0;
+    background: #fff;
+}
+
+.aarti-card {
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    text-align: center;
+    transition: .4s;
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+    .aarti-card:hover {
+        transform: translateY(-10px);
+    }
+
+.icon {
+    font-size: 50px;
+    color: #E67E22;
+    margin-bottom: 20px;
+}
+
+.aarti-card h4 {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.aarti-card p {
+    color: #666;
+}
