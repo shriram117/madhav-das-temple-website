@@ -3,6 +3,7 @@ import axios from "axios";
 import AdminLayout from "../components/AdminLayout";
 import EventForm from "../components/EventForm";
 import API_BASE_URL, { SERVER_URL } from "../../config/api";
+
 function Events() {
 
     const [showForm, setShowForm] = useState(false);
@@ -30,20 +31,17 @@ function Events() {
 
     };
 
-
     const editEvent = (item) => {
 
         setEditData(item);
-
         setShowForm(true);
 
     };
+
     const deleteEvent = async (id) => {
 
         if (!window.confirm("Are you sure you want to delete this event?")) {
-
             return;
-
         }
 
         try {
@@ -54,18 +52,22 @@ function Events() {
 
             alert("Event Deleted Successfully");
 
-            loadEvents();
+            await loadEvents();
 
         }
         catch (err) {
 
             console.log(err);
 
-            alert("Delete Failed");
+            alert(
+                err.response?.data?.message ||
+                "Delete Failed"
+            );
 
         }
 
     };
+
     useEffect(() => {
 
         loadEvents();
@@ -76,13 +78,21 @@ function Events() {
 
         <AdminLayout>
 
-                <div className="d-flex justify-content-between mb-4">
+            <div className="d-flex justify-content-between mb-4">
 
                 <h2>📅 Event Management</h2>
 
                 <button
                     className="btn btn-primary"
-                    onClick={() => setShowForm(!showForm)}
+                    onClick={() => {
+
+                        if (showForm) {
+                            setEditData(null);
+                        }
+
+                        setShowForm(!showForm);
+
+                    }}
                 >
                     {showForm ? "Close Form" : "+ Add Event"}
                 </button>
@@ -91,6 +101,7 @@ function Events() {
 
             {
                 showForm && (
+
                     <EventForm
                         loadEvents={loadEvents}
                         editData={editData}
@@ -99,6 +110,7 @@ function Events() {
                             setEditData(null);
                         }}
                     />
+
                 )
             }
 
@@ -128,38 +140,52 @@ function Events() {
 
                             <tr key={item.event_id}>
 
-                                <td>{item.event_id}</td>
+                                <td>
+                                    {item.event_id}
+                                </td>
 
                                 <td>
-
-                                    {
-                                        item.image_url ?
-
+                                    {item.image_url ? (
+                                        <div>
                                             <img
-                                                src={`${SERVER_URL}${item.image_url}`}
+                                                src={item.image_url}
                                                 width="90"
                                                 height="60"
+                                                alt={item.title || "Event"}
                                                 style={{
                                                     objectFit: "cover",
                                                     borderRadius: "8px"
                                                 }}
+                                                onError={(e) => {
+                                                    console.log("IMAGE LOAD ERROR:", item.image_url);
+                                                    e.currentTarget.src = "/no-image.png";
+                                                }}
                                             />
 
-                                            :
-
-                                            "No Image"
-
-                                    }
-
+                                            <div style={{ fontSize: "10px", marginTop: "3px" }}>
+                                                {item.image_url}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        "No Image"
+                                    )}
                                 </td>
 
-                                <td>{item.title}</td>
+                                <td>
+                                    {item.title}
+                                </td>
 
-                                <td>{item.event_date}</td>
+                                <td>
+                                    {item.event_date}
+                                </td>
 
-                                <td>{item.event_time}</td>
+                                <td>
+                                    {item.event_time}
+                                </td>
 
-                                <td>{item.location}</td>
+                                <td>
+                                    {item.location}
+                                </td>
 
                                 <td>
 
@@ -182,7 +208,9 @@ function Events() {
 
                                     <button
                                         className="btn btn-danger btn-sm"
-                                        onClick={() => deleteEvent(item.event_id)}
+                                        onClick={() =>
+                                            deleteEvent(item.event_id)
+                                        }
                                     >
                                         Delete
                                     </button>

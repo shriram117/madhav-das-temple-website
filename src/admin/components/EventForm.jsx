@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import API_BASE_URL from "../../config/api";
+
 function EventForm({ loadEvents, editData, closeForm }) {
 
     const [title, setTitle] = useState("");
@@ -11,8 +12,6 @@ function EventForm({ loadEvents, editData, closeForm }) {
     const [eventId, setEventId] = useState(0);
     const [image, setImage] = useState(null);
 
-
-    // 👇 Add here
     useEffect(() => {
 
         if (editData) {
@@ -61,7 +60,14 @@ function EventForm({ loadEvents, editData, closeForm }) {
             formData.append("event_time", eventTime);
             formData.append("location", location);
             formData.append("created_by", 1);
-            formData.append("old_image", editData?.image_url || "");
+
+            // Keep old image when editing
+            formData.append(
+                "old_image",
+                editData?.image_url || ""
+            );
+
+            // New image
             if (image) {
                 formData.append("image", image);
             }
@@ -69,27 +75,15 @@ function EventForm({ loadEvents, editData, closeForm }) {
             if (eventId === 0) {
 
                 await axios.post(
-                   
                     `${API_BASE_URL}/events`,
-                    formData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data"
-                        }
-                    }
+                    formData
                 );
 
             } else {
 
                 await axios.put(
-                    
                     `${API_BASE_URL}/events/${eventId}`,
-                    formData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data"
-                        }
-                    }
+                    formData
                 );
 
             }
@@ -99,8 +93,8 @@ function EventForm({ loadEvents, editData, closeForm }) {
                     ? "Event Saved Successfully"
                     : "Event Updated Successfully"
             );
+
             await loadEvents();
-           
 
             setEventId(0);
             setTitle("");
@@ -109,13 +103,18 @@ function EventForm({ loadEvents, editData, closeForm }) {
             setEventTime("");
             setLocation("");
             setImage(null);
+
             closeForm();
+
         }
         catch (err) {
 
-            console.log(err);
+            console.error("EVENT SAVE ERROR:", err);
 
-            alert(err.response?.data?.message || "Save Failed");
+            alert(
+                err.response?.data?.message ||
+                "Save Failed"
+            );
 
         }
 
@@ -128,7 +127,9 @@ function EventForm({ loadEvents, editData, closeForm }) {
             <div className="card-header">
 
                 <h4>
-                    {eventId === 0 ? "📅 Add Event" : "✏️ Edit Event"}
+                    {eventId === 0
+                        ? "📅 Add Event"
+                        : "✏️ Edit Event"}
                 </h4>
 
             </div>
@@ -144,7 +145,9 @@ function EventForm({ loadEvents, editData, closeForm }) {
                         <input
                             className="form-control"
                             value={title}
-                            onChange={(e) => setTitle(e.target.value)}
+                            onChange={(e) =>
+                                setTitle(e.target.value)
+                            }
                         />
 
                     </div>
@@ -156,7 +159,9 @@ function EventForm({ loadEvents, editData, closeForm }) {
                         <input
                             className="form-control"
                             value={location}
-                            onChange={(e) => setLocation(e.target.value)}
+                            onChange={(e) =>
+                                setLocation(e.target.value)
+                            }
                         />
 
                     </div>
@@ -169,7 +174,9 @@ function EventForm({ loadEvents, editData, closeForm }) {
                             type="date"
                             className="form-control"
                             value={eventDate}
-                            onChange={(e) => setEventDate(e.target.value)}
+                            onChange={(e) =>
+                                setEventDate(e.target.value)
+                            }
                         />
 
                     </div>
@@ -182,7 +189,9 @@ function EventForm({ loadEvents, editData, closeForm }) {
                             type="time"
                             className="form-control"
                             value={eventTime}
-                            onChange={(e) => setEventTime(e.target.value)}
+                            onChange={(e) =>
+                                setEventTime(e.target.value)
+                            }
                         />
 
                     </div>
@@ -195,7 +204,9 @@ function EventForm({ loadEvents, editData, closeForm }) {
                             rows="3"
                             className="form-control"
                             value={description}
-                            onChange={(e) => setDescription(e.target.value)}
+                            onChange={(e) =>
+                                setDescription(e.target.value)
+                            }
                         />
 
                     </div>
@@ -208,7 +219,9 @@ function EventForm({ loadEvents, editData, closeForm }) {
                             type="file"
                             className="form-control"
                             accept="image/*"
-                            onChange={(e) => setImage(e.target.files[0])}
+                            onChange={(e) =>
+                                setImage(e.target.files[0])
+                            }
                         />
 
                     </div>
@@ -219,7 +232,9 @@ function EventForm({ loadEvents, editData, closeForm }) {
                     className="btn btn-success"
                     onClick={saveEvent}
                 >
-                    {eventId === 0 ? "Save Event" : "Update Event"}
+                    {eventId === 0
+                        ? "Save Event"
+                        : "Update Event"}
                 </button>
 
             </div>
