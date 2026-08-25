@@ -1,7 +1,94 @@
-.service-image {
+/* =========================================
+   TEMPLE SERVICES TABLE
+========================================= */
+
+.service-table {
     width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 15px;
+    border-collapse: collapse;
+    background: #fff;
+    font-size: 12px;
 }
+
+    .service-table th {
+        background: #212529;
+        color: #fff;
+        font-weight: 600;
+        padding: 7px 8px;
+        text-align: left;
+        border: 1px solid #dee2e6;
+    }
+
+    .service-table td {
+        padding: 6px 8px;
+        border: 1px solid #dee2e6;
+        vertical-align: middle;
+        color: #222;
+    }
+
+    .service-table tbody tr:nth-child(even) {
+        background: #f8f9fa;
+    }
+
+    .service-table tbody tr:hover {
+        background: #f1f1f1;
+    }
+
+
+    /* =========================================
+   SERVICE IMAGE
+========================================= */
+
+    .service-table .service-image {
+        width: 60px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 6px;
+        display: block;
+    }
+
+
+    /* =========================================
+   STATUS
+========================================= */
+
+    .service-table .service-status {
+        display: inline-block;
+        background: #198754;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 7px;
+        border-radius: 5px;
+    }
+
+
+    /* =========================================
+   ACTION BUTTONS
+========================================= */
+
+    .service-table .edit-btn {
+        background: #ffc107;
+        color: #000;
+        border: none;
+        padding: 5px 10px;
+        font-size: 11px;
+        border-radius: 3px;
+        margin-right: 5px;
+    }
+
+        .service-table .edit-btn:hover {
+            background: #e0a800;
+        }
+
+    .service-table .delete-btn {
+        background: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        font-size: 11px;
+        border-radius: 3px;
+    }
+
+        .service-table .delete-btn:hover {
+            background: #bb2d3b;
+        }

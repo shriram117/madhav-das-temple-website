@@ -1,4 +1,5 @@
 const express = require("express");
+
 const router = express.Router();
 
 const upload = require("../config/serviceUpload");
@@ -10,12 +11,47 @@ const {
     deleteService
 } = require("../controllers/serviceController");
 
-router.get("/", getAllServices);
 
-router.post("/", upload.single("image"), addService);
+// ======================================================
+// GET ALL SERVICES
+// ======================================================
 
-router.put("/:id", upload.single("image"), updateService);
+router.get(
+    "/",
+    getAllServices
+);
 
-router.delete("/:id", deleteService);
+
+// ======================================================
+// ADD SERVICE
+// ======================================================
+
+router.post(
+    "/",
+    upload.single("image"),
+    addService
+);
+
+
+// ======================================================
+// UPDATE SERVICE
+// ======================================================
+
+router.put(
+    "/:id",
+    upload.single("image"),
+    updateService
+);
+
+
+// ======================================================
+// DELETE SERVICE
+// ======================================================
+
+router.delete(
+    "/:id",
+    deleteService
+);
+
 
 module.exports = router;

@@ -1,6 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
-import API_BASE_URL, { SERVER_URL } from "../../../config/api";
+
+import API_BASE_URL, {
+    SERVER_URL
+} from "../../../config/api";
+
 
 function ServiceTable({
     data = [],
@@ -10,11 +14,51 @@ function ServiceTable({
 
     const [search, setSearch] = useState("");
 
+
+    // ======================================================
+    // IMAGE URL
+    // ======================================================
+
+    const getImageUrl = (imageUrl) => {
+
+        if (!imageUrl) {
+            return "";
+        }
+
+        const url = String(imageUrl).trim();
+
+
+        // Cloudinary / Complete URL
+        if (
+            url.startsWith("http://") ||
+            url.startsWith("https://")
+        ) {
+
+            return url;
+
+        }
+
+
+        // Old Local Image
+        return `${SERVER_URL}${url}`;
+
+    };
+
+
+    // ======================================================
+    // DELETE SERVICE
+    // ======================================================
+
     const deleteService = async (id) => {
 
-        if (!window.confirm("Are you sure you want to delete this service?")) {
+        if (
+            !window.confirm(
+                "Are you sure you want to delete this service?"
+            )
+        ) {
             return;
         }
+
 
         try {
 
@@ -22,44 +66,75 @@ function ServiceTable({
                 `${API_BASE_URL}/services/${id}`
             );
 
-            alert("Service Deleted Successfully");
 
-            loadServices();
+            alert(
+                "Service Deleted Successfully"
+            );
+
+
+            await loadServices();
 
         }
         catch (err) {
 
-            console.log(err);
+            console.error(
+                "Delete Service Error:",
+                err
+            );
 
-            alert("Delete Failed");
+
+            alert(
+                err.response?.data?.message ||
+                "Delete Failed"
+            );
 
         }
 
     };
 
-    console.log("SERVICE TABLE DATA:", data);
 
-    const filteredData = data.filter((item) =>
-        item.service_name
-            ?.toLowerCase()
-            .includes(search.toLowerCase())
+    // ======================================================
+    // SEARCH
+    // ======================================================
+
+    const filteredData = data.filter(
+        (item) =>
+            item.service_name
+                ?.toLowerCase()
+                .includes(
+                    search.toLowerCase()
+                )
     );
+
+
+    // ======================================================
+    // UI
+    // ======================================================
 
     return (
 
         <>
 
-            <div className="row mb-3">
+
+            {/* ==================================================
+                SEARCH
+            ================================================== */}
+
+            <div className="row mb-2">
 
                 <div className="col-md-4">
 
                     <input
                         type="text"
+                        id="serviceSearch"
+                        name="serviceSearch"
                         className="form-control"
                         placeholder="Search Service..."
                         value={search}
                         onChange={(e) =>
-                            setSearch(e.target.value)
+                            setSearch(
+                                e.target.value
+                            )
                         }
                     />
 
@@ -67,140 +142,221 @@ function ServiceTable({
 
             </div>
 
+
+            {/* ==================================================
+                TABLE
+            ================================================== */}
+
             <div className="table-responsive">
 
-                <table className="table table-bordered table-hover align-middle">
+                <table className="table table-bordered table-striped">
 
-                    <thead className="table-dark">
+
+                    {/* ==================================================
+                        HEADER
+                    ================================================== */}
+
+                    <thead>
 
                         <tr>
+                       
+                            <th>ID</th>
+                            <th>Image</th>
+                            <th>Service Name</th>
 
-                            <th style={{ width: "70px" }}>
-                                #
-                            </th>
+                            <th>Description</th>
 
-                            <th style={{ width: "120px" }}>
-                                Image
-                            </th>
+                            <th>Order</th>
 
-                            <th>
-                                Service Name
-                            </th>
+                            <th>Status</th>
 
-                            <th>
-                                Description
-                            </th>
+                            <th>Action</th>
 
-                            <th style={{ width: "120px" }}>
-                                Order
-                            </th>
-
-                            <th style={{ width: "120px" }}>
-                                Status
-                            </th>
-
-                            <th style={{ width: "180px" }}>
-                                Action
-                            </th>
-
+                          
                         </tr>
 
                     </thead>
+
+
+                    {/* ==================================================
+                        BODY
+                    ================================================== */}
 
                     <tbody>
 
                         {filteredData.length > 0 ? (
 
-                            filteredData.map((item, index) => (
+                            filteredData.map(
+                                (item, index) => (
 
-                                <tr key={item.service_id}>
+                                    <tr
+                                        key={
+                                            item.service_id
+                                        }
+                                    >
 
-                                    <td>
-                                        {index + 1}
-                                    </td>
 
-                                    <td>
+                                        {/* ============================
+                                            #
+                                        ============================ */}
 
-                                        {item.image_url ? (
+                                        <td>
+                                            {index + 1}
+                                        </td>
 
-                                            <img
-                                                src={`${SERVER_URL}${item.image_url}`}
-                                                alt={item.service_name}
-                                                style={{
-                                                    width: "80px",
-                                                    height: "60px",
-                                                    objectFit: "cover",
-                                                    borderRadius: "8px"
-                                                }}
-                                            />
 
-                                        ) : (
+                                        {/* ============================
+                                            IMAGE
+                                        ============================ */}
 
-                                            <span className="text-muted">
-                                                No Image
-                                            </span>
+                                        <td>
 
-                                        )}
+                                            {item.image_url ? (
 
-                                    </td>
+                                                <img
+                                                    src={
+                                                        getImageUrl(
+                                                            item.image_url
+                                                        )
+                                                    }
+                                                    alt={
+                                                        item.service_name ||
+                                                        "Service"
+                                                    }
+                                                    width="90"
+                                                    height="60"
+                                                    style={{
+                                                        width: "60px",
+                                                        height: "48px",
+                                                        objectFit: "cover",
+                                                        borderRadius: "6px",
+                                                        display: "block"
+                                                    }}
+                                                    onError={(e) => {
 
-                                    <td>
-                                        {item.service_name}
-                                    </td>
+                                                        console.error(
+                                                            "SERVICE IMAGE ERROR:",
+                                                            e.currentTarget.src
+                                                        );
 
-                                    <td>
-                                        {item.description}
-                                    </td>
+                                                    }}
+                                                />
 
-                                    <td>
-                                        {item.display_order}
-                                    </td>
+                                            ) : (
 
-                                    <td>
+                                                <span className="text-muted">
+                                                    No Image
+                                                </span>
 
-                                        {item.status === true ? (
+                                            )}
 
-                                            <span className="badge bg-success">
-                                                Active
-                                            </span>
+                                        </td>
 
-                                        ) : (
 
-                                            <span className="badge bg-danger">
-                                                Inactive
-                                            </span>
+                                        {/* ============================
+                                            SERVICE NAME
+                                        ============================ */}
 
-                                        )}
+                                        <td>
 
-                                    </td>
-
-                                    <td>
-
-                                        <button
-                                            className="btn btn-sm btn-primary me-2"
-                                            onClick={() =>
-                                                editRow(item)
+                                            {
+                                                item.service_name
                                             }
-                                        >
-                                            ✏️ Edit
-                                        </button>
 
-                                        <button
-                                            className="btn btn-sm btn-danger"
-                                            onClick={() =>
-                                                deleteService(
-                                                    item.service_id
-                                                )
+                                        </td>
+
+
+                                        {/* ============================
+                                            DESCRIPTION
+                                        ============================ */}
+
+                                        <td>
+
+                                            {
+                                                item.description
                                             }
-                                        >
-                                            🗑️ Delete
-                                        </button>
 
-                                    </td>
+                                        </td>
 
-                                </tr>
 
-                            ))
+                                        {/* ============================
+                                            ORDER
+                                        ============================ */}
+
+                                        <td>
+
+                                            {
+                                                item.display_order
+                                            }
+
+                                        </td>
+
+
+                                        {/* ============================
+                                            STATUS
+                                        ============================ */}
+
+                                        <td>
+
+                                            {
+                                                item.status === true
+                                                    ? (
+
+                                                        <span className="badge bg-success">
+                                                            Active
+                                                        </span>
+
+                                                    )
+                                                    : (
+
+                                                        <span className="badge bg-danger">
+                                                            Inactive
+                                                        </span>
+
+                                                    )
+                                            }
+
+                                        </td>
+
+
+                                        {/* ============================
+                                            ACTION
+                                        ============================ */}
+
+                                        <td>
+
+                                            <button
+                                                type="button"
+                                                className="btn btn-warning btn-sm me-2"
+                                                onClick={() =>
+                                                    editRow(
+                                                        item
+                                                    )
+                                                }
+                                            >
+                                                ✏️ Edit
+                                            </button>
+
+
+                                            <button
+                                                type="button"
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() =>
+                                                    deleteService(
+                                                        item.service_id
+                                                    )
+                                                }
+                                            >
+                                                🗑️ Delete
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+
+                                )
+
+                            )
 
                         ) : (
 
@@ -226,6 +382,8 @@ function ServiceTable({
         </>
 
     );
+
 }
+
 
 export default ServiceTable;

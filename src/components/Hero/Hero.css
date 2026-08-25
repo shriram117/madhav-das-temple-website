@@ -1,80 +1,189 @@
+/* ======================================
+   PREMIUM HERO / BANNER
+====================================== */
+
 .hero {
-    min-height: 100vh;
+    min-height: 78vh;
     background-size: cover;
-    background-position: center;
+    background-position: center center;
     background-repeat: no-repeat;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
+
+
+/* ======================================
+   HERO OVERLAY
+====================================== */
 
 .overlay {
     width: 100%;
-    min-height: 100vh;
-    background: rgba(0, 0, 0, 0.55);
+    min-height: 78vh;
+    background: linear-gradient( 90deg, rgba(0, 0, 0, 0.68), rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.55) );
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     color: #fff;
-    padding: 20px;
+    padding: 40px 20px;
 }
+
+
+/* ======================================
+   HERO CONTENT
+====================================== */
 
 .hero-content {
     max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    animation: heroFadeIn 1s ease-out;
 }
 
     .hero-content h1 {
-        font-size: 60px;
-        font-weight: 700;
-        margin-bottom: 20px;
+        font-size: clamp(38px, 5vw, 64px);
+        font-weight: 800;
+        line-height: 1.15;
+        margin-bottom: 18px;
+        text-shadow: 0 3px 12px rgba(0, 0, 0, 0.55);
     }
 
     .hero-content h3 {
         color: #FFD700;
-        margin-bottom: 20px;
+        font-size: clamp(20px, 2.5vw, 30px);
+        font-weight: 700;
+        margin-bottom: 18px;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
     }
 
     .hero-content p {
-        font-size: 20px;
-        margin-bottom: 35px;
+        font-size: clamp(16px, 2vw, 20px);
         line-height: 1.7;
+        max-width: 750px;
+        margin: 0 auto 32px;
+        color: #f5f5f5;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
     }
+
+
+/* ======================================
+   HERO BUTTONS
+====================================== */
 
 .hero-buttons {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    align-items: center;
+    gap: 16px;
     flex-wrap: wrap;
 }
 
 .btn-primary,
 .btn-secondary {
-    padding: 14px 35px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 160px;
+    padding: 13px 30px;
     border: none;
     border-radius: 50px;
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 700;
     cursor: pointer;
-    transition: .3s;
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
+
+/* Primary */
 .btn-primary {
-    background: #E67E22;
-    color: white;
+    background: linear-gradient( 135deg, #FF9800, #E67E22 );
+    color: #fff;
+    box-shadow: 0 8px 22px rgba(230, 126, 34, 0.35);
 }
 
+
+/* Secondary */
 .btn-secondary {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     color: #E67E22;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
 }
 
+
+    /* Hover */
     .btn-primary:hover,
     .btn-secondary:hover {
-        transform: translateY(-3px);
+        transform: translateY(-4px);
+        text-decoration: none;
     }
 
-@media(max-width:768px) {
+.btn-primary:hover {
+    box-shadow: 0 14px 30px rgba(230, 126, 34, 0.45);
+}
+
+.btn-secondary:hover {
+    background: #fff;
+    color: #C96A13;
+}
+
+
+/* ======================================
+   HERO ANIMATION
+====================================== */
+
+@keyframes heroFadeIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ======================================
+   TABLET
+====================================== */
+
+@media (max-width: 991px) {
+
+    .hero {
+        min-height: 70vh;
+    }
+
+    .overlay {
+        min-height: 70vh;
+    }
+
+    .hero-content {
+        max-width: 750px;
+    }
+}
+
+
+/* ======================================
+   MOBILE
+====================================== */
+
+@media (max-width: 768px) {
+
+    .hero {
+        min-height: 65vh;
+        background-position: center center;
+    }
+
+    .overlay {
+        min-height: 65vh;
+        padding: 35px 18px;
+    }
 
     .hero-content h1 {
         font-size: 38px;
@@ -86,5 +195,56 @@
 
     .hero-content p {
         font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 25px;
+    }
+
+    .hero-buttons {
+        gap: 12px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        min-width: 145px;
+        padding: 11px 22px;
+        font-size: 15px;
+    }
+}
+
+
+/* ======================================
+   SMALL MOBILE
+====================================== */
+
+@media (max-width: 480px) {
+
+    .hero {
+        min-height: 60vh;
+    }
+
+    .overlay {
+        min-height: 60vh;
+    }
+
+    .hero-content h1 {
+        font-size: 31px;
+    }
+
+    .hero-content h3 {
+        font-size: 19px;
+    }
+
+    .hero-content p {
+        font-size: 15px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 190px;
     }
 }
