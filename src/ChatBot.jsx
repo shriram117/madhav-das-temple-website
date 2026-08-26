@@ -11,17 +11,35 @@ import "./ChatBot.css";
 // ==========================================
 
 const suggestedQuestions = [
-
     "🙏 आरती का समय क्या है?",
-
     "📅 आने वाले कार्यक्रम कौन से हैं?",
-
     "🛕 मंदिर में कौन-कौन सी सेवाएं हैं?",
-
     "📢 आज की सूचना क्या है?",
-
     "📍 मंदिर का पता और संपर्क क्या है?"
+];
 
+
+// ==========================================
+// AARTI OPTIONS
+// ==========================================
+
+const aartiOptions = [
+    {
+        name: "Mangla Aarti",
+        question: "Mangla Aarti का समय क्या है?"
+    },
+    {
+        name: "Morning Aarti",
+        question: "Morning Aarti का समय क्या है?"
+    },
+    {
+        name: "Evening Aarti",
+        question: "Evening Aarti का समय क्या है?"
+    },
+    {
+        name: "Bhajan Sandhya",
+        question: "Bhajan Sandhya का समय क्या है?"
+    }
 ];
 
 
@@ -37,15 +55,14 @@ function ChatBot() {
 
     const [loading, setLoading] = useState(false);
 
-    const [messages, setMessages] = useState([
+    const [showAartiOptions, setShowAartiOptions] = useState(false);
 
+    const [messages, setMessages] = useState([
         {
             sender: "bot",
-
             text:
                 "नमस्ते 🙏 मैं 1008 माधव दास जी मंदिर का AI सहायक हूँ। मैं आपकी कैसे मदद कर सकता हूँ?"
         }
-
     ]);
 
 
@@ -57,14 +74,10 @@ function ChatBot() {
 
         const userMessage = text.trim();
 
-
-        // Empty message
         if (!userMessage) {
             return;
         }
 
-
-        // Prevent multiple requests
         if (loading) {
             return;
         }
@@ -72,22 +85,16 @@ function ChatBot() {
 
         // Add user message
         setMessages((prev) => [
-
             ...prev,
-
             {
                 sender: "user",
                 text: userMessage
             }
-
         ]);
 
 
-        // Clear input
         setMessage("");
 
-
-        // Start loading
         setLoading(true);
 
 
@@ -100,13 +107,10 @@ function ChatBot() {
 
 
             const response = await axios.post(
-
                 `${API_BASE_URL}/chat`,
-
                 {
                     message: userMessage
                 }
-
             );
 
 
@@ -116,19 +120,14 @@ function ChatBot() {
             );
 
 
-            // Add AI response
             setMessages((prev) => [
-
                 ...prev,
-
                 {
                     sender: "bot",
-
                     text:
                         response.data?.answer ||
                         "क्षमा करें 🙏 अभी उत्तर नहीं मिल पाया।"
                 }
-
             ]);
 
         }
@@ -141,16 +140,12 @@ function ChatBot() {
 
 
             setMessages((prev) => [
-
                 ...prev,
-
                 {
                     sender: "bot",
-
                     text:
                         "क्षमा करें 🙏 अभी AI सेवा उपलब्ध नहीं है। कृपया थोड़ी देर बाद प्रयास करें।"
                 }
-
             ]);
 
         }
@@ -164,12 +159,31 @@ function ChatBot() {
 
 
     // ==========================================
-    // NORMAL SEND BUTTON
+    // NORMAL SEND
     // ==========================================
 
     const sendMessage = () => {
 
-        sendMessageText(message);
+        const text = message.trim();
+
+        if (!text) {
+            return;
+        }
+
+        // BACK COMMAND
+        if (
+            text.toLowerCase() === "back" ||
+            text.toLowerCase() === "go back" ||
+            text === "वापस" ||
+            text === "पीछे"
+        ) {
+
+            backToQuestions();
+
+            return;
+        }
+
+        sendMessageText(text);
 
     };
 
@@ -180,7 +194,45 @@ function ChatBot() {
 
     const askSuggestedQuestion = (question) => {
 
+        // Aarti question → show Aarti options
+        if (
+            question.includes("आरती का समय")
+        ) {
+
+            setMessages((prev) => [
+                ...prev,
+                {
+                    sender: "user",
+                    text: question
+                },
+                {
+                    sender: "bot",
+                    text:
+                        "🙏 आप किस आरती का समय जानना चाहते हैं?"
+                }
+            ]);
+
+            setShowAartiOptions(true);
+
+            return;
+        }
+
+
+        // Other questions → send normally
         sendMessageText(question);
+
+    };
+
+
+    // ==========================================
+    // SELECT AARTI
+    // ==========================================
+
+    const selectAarti = (aarti) => {
+
+        setShowAartiOptions(false);
+
+        sendMessageText(aarti.question);
 
     };
 
@@ -228,6 +280,34 @@ function ChatBot() {
 
 
     // ==========================================
+    // BACK TO QUESTIONS
+    // ==========================================
+
+    const backToQuestions = () => {
+
+        if (loading) {
+            return;
+        }
+
+
+        setShowAartiOptions(false);
+
+
+        setMessages([
+            {
+                sender: "bot",
+                text:
+                    "नमस्ते 🙏 मैं 1008 माधव दास जी मंदिर का AI सहायक हूँ। मैं आपकी कैसे मदद कर सकता हूँ?"
+            }
+        ]);
+
+
+        setMessage("");
+
+    };
+
+
+    // ==========================================
     // UI
     // ==========================================
 
@@ -236,23 +316,25 @@ function ChatBot() {
         <>
 
             {/* ==================================
-                FLOATING CHAT BUTTON
+                FLOATING NAMASTE BUTTON
             ================================== */}
 
             {!open && (
-                                  <button
-                        type="button"
-                        className="chatbot-image-button"
-                        onClick={openChat}
-                        aria-label="Madhav Das Ji AI Assistant"
-                    >
-                        <img
-                            src="/chatbot-namaste.png"
-                            alt="Namaste Madhav Das Ji AI Assistant"
-                        />
-                    </button>
 
-               
+                <button
+                    type="button"
+                    className="chatbot-image-button"
+                    onClick={openChat}
+                    aria-label="Madhav Das Ji AI Assistant"
+                >
+
+                    <img
+                        src="/chatbot-namaste.png"
+                        alt="Namaste Madhav Das Ji AI Assistant"
+                    />
+
+                </button>
+
             )}
 
 
@@ -293,16 +375,34 @@ function ChatBot() {
                         </div>
 
 
-                        <button
-                            type="button"
-                            className="chatbot-close"
-                            onClick={closeChat}
-                            aria-label="Close chat"
-                        >
+                        <div className="chatbot-header-actions">
 
-                            ×
+                            <button
+                                type="button"
+                                className="chatbot-back"
+                                onClick={backToQuestions}
+                                disabled={loading}
+                                aria-label="Back to questions"
+                                title="मुख्य प्रश्न"
+                            >
 
-                        </button>
+                                ← वापस
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                className="chatbot-close"
+                                onClick={closeChat}
+                                aria-label="Close chat"
+                            >
+
+                                ×
+
+                            </button>
+
+                        </div>
 
                     </div>
 
@@ -319,7 +419,8 @@ function ChatBot() {
                         ========================== */}
 
                         {messages.length === 1 &&
-                            !loading && (
+                            !loading &&
+                            !showAartiOptions && (
 
                                 <div className="suggested-questions">
 
@@ -354,6 +455,45 @@ function ChatBot() {
                                 </div>
 
                             )}
+
+
+                        {/* ==========================
+                            AARTI OPTIONS
+                        ========================== */}
+
+                        {showAartiOptions && !loading && (
+
+                            <div className="aarti-options">
+
+                                <div className="suggested-title">
+
+                                    🙏 कौन-सी आरती का समय जानना चाहते हैं?
+
+                                </div>
+
+
+                                {aartiOptions.map(
+                                    (aarti, index) => (
+
+                                        <button
+                                            type="button"
+                                            key={index}
+                                            className="suggested-question"
+                                            onClick={() =>
+                                                selectAarti(aarti)
+                                            }
+                                        >
+
+                                            🪔 {aarti.name}
+
+                                        </button>
+
+                                    )
+                                )}
+
+                            </div>
+
+                        )}
 
 
                         {/* ==========================
@@ -407,14 +547,13 @@ function ChatBot() {
 
                     <div className="chatbot-input-area">
 
-
                         <textarea
                             value={message}
                             onChange={(e) =>
                                 setMessage(e.target.value)
                             }
                             onKeyDown={handleKeyDown}
-                            placeholder="अपना सवाल लिखें..."
+                            placeholder="सवाल लिखें या 'back' लिखें..."
                             rows="1"
                             disabled={loading}
                             aria-label="Chat message"

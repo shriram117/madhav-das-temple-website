@@ -12,20 +12,222 @@ const ai = new GoogleGenAI({
 
 
 // ======================================================
+// TEMPLE CONTACT / ADDRESS
+// ======================================================
+
+const getTempleContactAnswer = async (message) => {
+
+    const text = message.toLowerCase();
+
+    const isContactQuestion =
+        text.includes("मंदिर का पता") ||
+        text.includes("पता और संपर्क") ||
+        text.includes("मंदिर कहाँ") ||
+        text.includes("मंदिर कहां") ||
+        text.includes("मंदिर का एड्रेस") ||
+        text.includes("संपर्क") ||
+        text.includes("address") ||
+        text.includes("contact") ||
+        text.includes("location") ||
+        text.includes("phone") ||
+        text.includes("mobile") ||
+        text.includes("whatsapp");
+
+    if (!isContactQuestion) {
+        return null;
+    }
+
+
+    const result = await pool.query(`
+        SELECT
+            temple_name,
+            address,
+            city,
+            state,
+            pincode,
+            mobile_no,
+            whatsapp_no,
+            email,
+            website,
+            google_map
+        FROM temple_settings
+        ORDER BY setting_id DESC
+        LIMIT 1
+    `);
+
+
+    if (result.rows.length === 0) {
+
+        return "🙏 मंदिर की संपर्क जानकारी अभी उपलब्ध नहीं है।";
+
+    }
+
+
+    const temple = result.rows[0];
+
+
+    const location = [
+        temple.address,
+        temple.city,
+        temple.state,
+        temple.pincode
+    ]
+        .filter(Boolean)
+        .join(", ");
+
+
+    let answer =
+        `📍 ${temple.temple_name || "1008 माधव दास जी मंदिर"}\n\n`;
+
+
+    if (location) {
+
+        answer += `🏠 पता: ${location}\n`;
+
+    }
+
+
+    if (temple.mobile_no) {
+
+        answer += `📞 मोबाइल: ${temple.mobile_no}\n`;
+
+    }
+
+
+    if (temple.whatsapp_no) {
+
+        answer += `💬 WhatsApp: ${temple.whatsapp_no}\n`;
+
+    }
+
+
+    if (temple.email) {
+
+        answer += `📧 Email: ${temple.email}\n`;
+
+    }
+
+
+    if (temple.website) {
+
+        answer += `🌐 Website: ${temple.website}\n`;
+
+    }
+
+
+    if (temple.google_map) {
+
+        answer += `\n🗺️ Google Map: ${temple.google_map}`;
+
+    }
+
+
+    return answer;
+};
+
+
+// ======================================================
 // AARTI - DIRECT DATABASE ANSWER
 // ======================================================
 
 const getAartiAnswer = async (message) => {
 
+    const lowerMessage = message.toLowerCase();
+
+
     const isHindi =
-        /आरती|आरती का समय|आरती कितने बजे|आरती कब/i.test(message);
+        /आरती|आरती का समय|आरती कितने बजे|आरती कब/i.test(
+            message
+        );
+
 
     const isEnglish =
-        /\baarti\b|\baarti timing\b|\baarti timings\b|\baarti time\b/i.test(message);
+        /\baarti\b|\baarti timing\b|\baarti timings\b|\baarti time\b/i.test(
+            message
+        );
+
 
     if (!isHindi && !isEnglish) {
+
         return null;
+
     }
+
+
+    // ==================================================
+    // SPECIFIC AARTI
+    // ==================================================
+
+    const aartiNames = [
+
+        "Mangla Aarti",
+
+        "Morning Aarti",
+
+        "Evening Aarti",
+
+        "Bhajan Sandhya"
+
+    ];
+
+
+    const selectedAarti = aartiNames.find(
+        (name) =>
+            lowerMessage.includes(
+                name.toLowerCase()
+            )
+    );
+
+
+    if (selectedAarti) {
+
+        const result = await pool.query(
+            `
+            SELECT
+                aarti_name,
+                aarti_time
+            FROM daily_aarti
+            WHERE status = true
+              AND LOWER(aarti_name) = LOWER($1)
+            LIMIT 1
+            `,
+            [selectedAarti]
+        );
+
+
+        if (result.rows.length === 0) {
+
+            return isHindi
+
+                ? `🙏 ${selectedAarti} की जानकारी अभी उपलब्ध नहीं है।`
+
+                : `🙏 Information for ${selectedAarti} is currently unavailable.`;
+
+        }
+
+
+        const item = result.rows[0];
+
+
+        if (isHindi) {
+
+            return `🪔 ${item.aarti_name}
+
+⏰ समय: ${item.aarti_time}`;
+
+        }
+
+
+        return `🪔 ${item.aarti_name}
+
+⏰ Time: ${item.aarti_time}`;
+
+    }
+
+
+    // ==================================================
+    // ALL AARTI
+    // ==================================================
 
     const result = await pool.query(`
         SELECT
@@ -36,13 +238,17 @@ const getAartiAnswer = async (message) => {
         ORDER BY display_order, aarti_id
     `);
 
+
     if (result.rows.length === 0) {
 
         return isHindi
+
             ? "🙏 अभी आरती की जानकारी उपलब्ध नहीं है।"
+
             : "🙏 Aarti timing information is currently unavailable.";
 
     }
+
 
     if (isHindi) {
 
@@ -56,6 +262,7 @@ ${result.rows
                 .join("\n")}`;
 
     }
+
 
     return `🙏 Daily Aarti timings:
 
@@ -75,14 +282,23 @@ ${result.rows
 const getEventsAnswer = async (message) => {
 
     const isHindi =
-        /कार्यक्रम|आने वाले कार्यक्रम|इवेंट|इवेंट्स|कार्यक्रमों/i.test(message);
+        /कार्यक्रम|आने वाले कार्यक्रम|इवेंट|इवेंट्स|कार्यक्रमों/i.test(
+            message
+        );
+
 
     const isEnglish =
-        /\bevent\b|\bevents\b|\bupcoming event\b|\bupcoming events\b|\bprogram\b|\bprograms\b/i.test(message);
+        /\bevent\b|\bevents\b|\bupcoming event\b|\bupcoming events\b|\bprogram\b|\bprograms\b/i.test(
+            message
+        );
+
 
     if (!isHindi && !isEnglish) {
+
         return null;
+
     }
+
 
     const result = await pool.query(`
         SELECT
@@ -97,13 +313,17 @@ const getEventsAnswer = async (message) => {
         LIMIT 20
     `);
 
+
     if (result.rows.length === 0) {
 
         return isHindi
+
             ? "🙏 अभी कोई आगामी कार्यक्रम उपलब्ध नहीं है।"
+
             : "🙏 No upcoming events are currently available.";
 
     }
+
 
     if (isHindi) {
 
@@ -116,12 +336,16 @@ ${result.rows
                         ? String(item.event_date)
                         : "तारीख उपलब्ध नहीं";
 
+
                     const time = item.event_time
                         ? String(item.event_time)
                         : "समय उपलब्ध नहीं";
 
-                    const location = item.location
-                        || "स्थान उपलब्ध नहीं";
+
+                    const location =
+                        item.location ||
+                        "स्थान उपलब्ध नहीं";
+
 
                     return `• ${item.title}
   तारीख: ${date}
@@ -133,6 +357,7 @@ ${result.rows
 
     }
 
+
     return `📅 Upcoming temple events:
 
 ${result.rows
@@ -142,12 +367,16 @@ ${result.rows
                     ? String(item.event_date)
                     : "Date not available";
 
+
                 const time = item.event_time
                     ? String(item.event_time)
                     : "Time not available";
 
-                const location = item.location
-                    || "Location not available";
+
+                const location =
+                    item.location ||
+                    "Location not available";
+
 
                 return `• ${item.title}
   Date: ${date}
@@ -166,14 +395,23 @@ ${result.rows
 const getServicesAnswer = async (message) => {
 
     const isHindi =
-        /सेवा|सेवाएं|सेवाएँ|मंदिर में कौन.*सेवा|कौन-कौन सी सेवाएं/i.test(message);
+        /सेवा|सेवाएं|सेवाएँ|मंदिर में कौन.*सेवा|कौन-कौन सी सेवाएं/i.test(
+            message
+        );
+
 
     const isEnglish =
-        /\bservice\b|\bservices\b|\btemple services\b/i.test(message);
+        /\bservice\b|\bservices\b|\btemple services\b/i.test(
+            message
+        );
+
 
     if (!isHindi && !isEnglish) {
+
         return null;
+
     }
+
 
     const result = await pool.query(`
         SELECT
@@ -184,13 +422,17 @@ const getServicesAnswer = async (message) => {
         ORDER BY display_order, service_id
     `);
 
+
     if (result.rows.length === 0) {
 
         return isHindi
+
             ? "🙏 अभी मंदिर की सेवाओं की जानकारी उपलब्ध नहीं है।"
+
             : "🙏 Temple service information is currently unavailable.";
 
     }
+
 
     if (isHindi) {
 
@@ -207,6 +449,7 @@ ${result.rows
                 .join("\n\n")}`;
 
     }
+
 
     return `🛕 Temple services:
 
@@ -229,14 +472,23 @@ ${result.rows
 const getNoticesAnswer = async (message) => {
 
     const isHindi =
-        /सूचना|नोटिस|नोटिस बोर्ड|आज की सूचना|नई सूचना/i.test(message);
+        /सूचना|नोटिस|नोटिस बोर्ड|आज की सूचना|नई सूचना/i.test(
+            message
+        );
+
 
     const isEnglish =
-        /\bnotice\b|\bnotices\b|\bnotice board\b|\blatest notice\b/i.test(message);
+        /\bnotice\b|\bnotices\b|\bnotice board\b|\blatest notice\b/i.test(
+            message
+        );
+
 
     if (!isHindi && !isEnglish) {
+
         return null;
+
     }
+
 
     const result = await pool.query(`
         SELECT
@@ -253,13 +505,17 @@ const getNoticesAnswer = async (message) => {
         LIMIT 20
     `);
 
+
     if (result.rows.length === 0) {
 
         return isHindi
+
             ? "📢 अभी कोई सूचना उपलब्ध नहीं है।"
+
             : "📢 No notices are currently available.";
 
     }
+
 
     if (isHindi) {
 
@@ -272,16 +528,21 @@ ${result.rows
                         ? String(item.notice_date)
                         : "तारीख उपलब्ध नहीं";
 
+
                     const time = item.notice_time
                         ? String(item.notice_time)
                         : "";
 
-                    const location = item.location
-                        || "";
 
-                    const validUpto = item.valid_upto
-                        ? String(item.valid_upto)
-                        : "";
+                    const location =
+                        item.location || "";
+
+
+                    const validUpto =
+                        item.valid_upto
+                            ? String(item.valid_upto)
+                            : "";
+
 
                     return `• ${item.title}
   तारीख: ${date}${time ? `\n  समय: ${time}` : ""}${location ? `\n  स्थान: ${location}` : ""}${validUpto ? `\n  मान्य: ${validUpto}` : ""}
@@ -292,6 +553,7 @@ ${result.rows
 
     }
 
+
     return `📢 Latest temple notices:
 
 ${result.rows
@@ -301,16 +563,21 @@ ${result.rows
                     ? String(item.notice_date)
                     : "Date not available";
 
+
                 const time = item.notice_time
                     ? String(item.notice_time)
                     : "";
 
-                const location = item.location
-                    || "";
 
-                const validUpto = item.valid_upto
-                    ? String(item.valid_upto)
-                    : "";
+                const location =
+                    item.location || "";
+
+
+                const validUpto =
+                    item.valid_upto
+                        ? String(item.valid_upto)
+                        : "";
+
 
                 return `• ${item.title}
   Date: ${date}${time ? `\n  Time: ${time}` : ""}${location ? `\n  Location: ${location}` : ""}${validUpto ? `\n  Valid until: ${validUpto}` : ""}
@@ -345,6 +612,7 @@ const getTempleData = async () => {
         LIMIT 1
     `);
 
+
     const aartiResult = await pool.query(`
         SELECT
             aarti_name,
@@ -354,6 +622,7 @@ const getTempleData = async () => {
         WHERE status = true
         ORDER BY display_order, aarti_id
     `);
+
 
     const eventResult = await pool.query(`
         SELECT
@@ -368,6 +637,7 @@ const getTempleData = async () => {
         LIMIT 50
     `);
 
+
     const serviceResult = await pool.query(`
         SELECT
             service_name,
@@ -376,6 +646,7 @@ const getTempleData = async () => {
         WHERE status = true
         ORDER BY display_order, service_id
     `);
+
 
     const noticeResult = await pool.query(`
         SELECT
@@ -392,6 +663,7 @@ const getTempleData = async () => {
         LIMIT 50
     `);
 
+
     return {
 
         temple: templeResult.rows,
@@ -405,6 +677,7 @@ const getTempleData = async () => {
         notices: noticeResult.rows
 
     };
+
 };
 
 
@@ -415,6 +688,7 @@ const getTempleData = async () => {
 const buildTempleContext = (data) => {
 
     const temple = data.temple[0] || {};
+
 
     const templeText = `
 Temple Name: ${temple.temple_name || ""}
@@ -564,17 +838,45 @@ const chatWithAI = async (req, res) => {
 
 
         // ==================================================
-        // 1. AARTI
+        // 1. TEMPLE CONTACT / ADDRESS
+        // ==================================================
+
+        const contactAnswer =
+            await getTempleContactAnswer(userMessage);
+
+
+        if (contactAnswer) {
+
+            console.log(
+                "📍 CONTACT ANSWER FROM DATABASE"
+            );
+
+
+            return res.json({
+
+                success: true,
+
+                answer: contactAnswer
+
+            });
+
+        }
+
+
+        // ==================================================
+        // 2. AARTI
         // ==================================================
 
         const aartiAnswer =
             await getAartiAnswer(userMessage);
 
+
         if (aartiAnswer) {
 
             console.log(
-                "🛕 AARTI ANSWER FROM DATABASE"
+                "🙏 AARTI ANSWER FROM DATABASE"
             );
+
 
             return res.json({
 
@@ -588,17 +890,19 @@ const chatWithAI = async (req, res) => {
 
 
         // ==================================================
-        // 2. EVENTS
+        // 3. EVENTS
         // ==================================================
 
         const eventsAnswer =
             await getEventsAnswer(userMessage);
+
 
         if (eventsAnswer) {
 
             console.log(
                 "📅 EVENTS ANSWER FROM DATABASE"
             );
+
 
             return res.json({
 
@@ -612,17 +916,19 @@ const chatWithAI = async (req, res) => {
 
 
         // ==================================================
-        // 3. SERVICES
+        // 4. SERVICES
         // ==================================================
 
         const servicesAnswer =
             await getServicesAnswer(userMessage);
+
 
         if (servicesAnswer) {
 
             console.log(
                 "🛕 SERVICES ANSWER FROM DATABASE"
             );
+
 
             return res.json({
 
@@ -636,17 +942,19 @@ const chatWithAI = async (req, res) => {
 
 
         // ==================================================
-        // 4. NOTICES
+        // 5. NOTICES
         // ==================================================
 
         const noticesAnswer =
             await getNoticesAnswer(userMessage);
+
 
         if (noticesAnswer) {
 
             console.log(
                 "📢 NOTICES ANSWER FROM DATABASE"
             );
+
 
             return res.json({
 
@@ -660,7 +968,7 @@ const chatWithAI = async (req, res) => {
 
 
         // ==================================================
-        // 5. GEMINI FOR OTHER QUESTIONS
+        // 6. GEMINI FOR OTHER QUESTIONS
         // ==================================================
 
         const templeData =
