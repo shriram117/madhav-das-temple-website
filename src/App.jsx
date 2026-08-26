@@ -16,6 +16,8 @@ import Donation from "./admin/pages/Donation";
 
 import ProtectedRoute from "./admin/components/ProtectedRoute";
 
+import ChatBot from "./ChatBot";
+
 
 function App() {
 
@@ -25,11 +27,17 @@ function App() {
 
             {/* =====================================
                 PUBLIC WEBSITE
+                ChatBot is available only here
             ===================================== */}
 
             <Route
                 path="/"
-                element={<TempleWebsite />}
+                element={
+                    <>
+                        <TempleWebsite />
+                        <ChatBot />
+                    </>
+                }
             />
 
 
@@ -139,6 +147,7 @@ function App() {
                     </ProtectedRoute>
                 }
             />
+
 
             {/* =====================================
                 MEMBERS
