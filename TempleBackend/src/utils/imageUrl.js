@@ -1,19 +1,20 @@
 import { SERVER_URL } from "../config/api";
 
-export const getImageUrl = (path) => {
+export const getImageUrl = (imageUrl) => {
 
-    if (!path) {
-
-        return "/no-image.png";
-
+    if (!imageUrl) {
+        return "";
     }
 
-    if (path.startsWith("http")) {
-
-        return path;
-
+    // Cloudinary / external URL
+    if (
+        imageUrl.startsWith("http://") ||
+        imageUrl.startsWith("https://")
+    ) {
+        return imageUrl;
     }
 
-    return `${SERVER_URL}${path}`;
+    // Local uploaded image
+    return `${SERVER_URL}${imageUrl}`;
 
 };

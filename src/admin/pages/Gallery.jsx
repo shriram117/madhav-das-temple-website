@@ -20,6 +20,32 @@ function Gallery() {
 
 
     // =========================================
+    // IMAGE URL
+    // =========================================
+
+    const getImageUrl = (imageUrl) => {
+
+        if (!imageUrl) {
+            return "";
+        }
+
+        // Cloudinary URL
+        if (
+            imageUrl.startsWith("http://") ||
+            imageUrl.startsWith("https://")
+        ) {
+
+            return imageUrl;
+
+        }
+
+        // Old local upload URL
+        return `${SERVER_URL}${imageUrl}`;
+
+    };
+
+
+    // =========================================
     // LOAD GALLERY
     // =========================================
 
@@ -27,14 +53,20 @@ function Gallery() {
 
         try {
 
-            const response = await api.get("/gallery");
+            const response =
+                await api.get("/gallery");
 
-            setGallery(response.data);
+            setGallery(
+                response.data
+            );
 
         }
         catch (error) {
 
-            console.log("Gallery Load Error:", error);
+            console.log(
+                "Gallery Load Error:",
+                error
+            );
 
             alert(
                 error.response?.data?.message ||
@@ -52,25 +84,38 @@ function Gallery() {
 
     const deleteGallery = async (id) => {
 
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete this image?"
-        );
+        const confirmDelete =
+            window.confirm(
+                "Are you sure you want to delete this image?"
+            );
 
-        if (!confirmDelete) return;
+        if (!confirmDelete) {
+            return;
+        }
 
 
         try {
 
-            await api.delete(`/gallery/${id}`);
+            await api.delete(
+                `/gallery/${id}`
+            );
 
-            alert("Gallery Deleted Successfully");
+
+            alert(
+                "Gallery Deleted Successfully"
+            );
+
 
             await loadGallery();
 
         }
         catch (err) {
 
-            console.error("Delete Gallery Error:", err);
+            console.error(
+                "Delete Gallery Error:",
+                err
+            );
+
 
             alert(
                 err.response?.data?.message ||
@@ -91,6 +136,32 @@ function Gallery() {
         setEditData(item);
 
         setShowForm(true);
+
+    };
+
+
+    // =========================================
+    // ADD NEW
+    // =========================================
+
+    const openAddForm = () => {
+
+        setEditData(null);
+
+        setShowForm(true);
+
+    };
+
+
+    // =========================================
+    // CLOSE FORM
+    // =========================================
+
+    const closeForm = () => {
+
+        setShowForm(false);
+
+        setEditData(null);
 
     };
 
@@ -128,9 +199,16 @@ function Gallery() {
                         className="btn btn-primary"
                         onClick={() => {
 
-                            setEditData(null);
+                            if (showForm) {
 
-                            setShowForm(!showForm);
+                                closeForm();
+
+                            }
+                            else {
+
+                                openAddForm();
+
+                            }
 
                         }}
                     >
@@ -155,17 +233,17 @@ function Gallery() {
 
                         <GalleryForm
 
-                            loadGallery={loadGallery}
+                            loadGallery={
+                                loadGallery
+                            }
 
-                            editData={editData}
+                            editData={
+                                editData
+                            }
 
-                            closeForm={() => {
-
-                                setShowForm(false);
-
-                                setEditData(null);
-
-                            }}
+                            closeForm={
+                                closeForm
+                            }
 
                         />
 
@@ -177,7 +255,9 @@ function Gallery() {
                     TABLE
                 ===================================== */}
 
-                <table className="table table-bordered table-striped">
+                <table
+                    className="table table-bordered table-striped"
+                >
 
                     <thead>
 
@@ -205,132 +285,173 @@ function Gallery() {
                     <tbody>
 
                         {
+                            gallery.length === 0 ? (
 
-                            gallery.map((item) => (
+                                <tr>
 
-                                <tr
-                                    key={item.gallery_id}
-                                >
+                                    <td
+                                        colSpan="7"
+                                        style={{
+                                            textAlign: "center"
+                                        }}
+                                    >
 
-                                    <td>
-                                        {item.gallery_id}
-                                    </td>
-
-
-                                    <td>
-
-                                        <img
-
-                                            src={
-                                                `${SERVER_URL}${item.image_url}`
-                                            }
-
-                                            alt={item.title}
-
-                                            width="100"
-
-                                            height="70"
-
-                                            style={{
-                                                objectFit: "cover",
-                                                borderRadius: "8px",
-                                                border: "1px solid #ddd"
-                                            }}
-
-                                            onError={(e) => {
-
-                                                console.log(
-                                                    "Image URL:",
-                                                    e.target.src
-                                                );
-
-                                                e.target.src =
-                                                    "https://via.placeholder.com/100x70?text=No+Image";
-
-                                            }}
-
-                                        />
-
-                                    </td>
-
-
-                                    <td>
-                                        {item.title}
-                                    </td>
-
-
-                                    <td>
-                                        {item.description}
-                                    </td>
-
-
-                                    <td>
-                                        {item.category}
-                                    </td>
-
-
-                                    <td>
-
-                                        <span
-
-                                            className={
-                                                item.status
-                                                    ? "status-active"
-                                                    : "status-inactive"
-                                            }
-
-                                        >
-
-                                            {
-                                                item.status
-                                                    ? "Active"
-                                                    : "Inactive"
-                                            }
-
-                                        </span>
-
-                                    </td>
-
-
-                                    <td>
-
-                                        <button
-
-                                            className="btn btn-warning btn-sm me-2"
-
-                                            onClick={() =>
-                                                editGallery(item)
-                                            }
-
-                                        >
-
-                                            Edit
-
-                                        </button>
-
-
-                                        <button
-
-                                            className="btn btn-danger btn-sm"
-
-                                            onClick={() =>
-                                                deleteGallery(
-                                                    item.gallery_id
-                                                )
-                                            }
-
-                                        >
-
-                                            Delete
-
-                                        </button>
+                                        No gallery images found.
 
                                     </td>
 
                                 </tr>
 
-                            ))
+                            ) : (
 
+                                gallery.map((item) => (
+
+                                    <tr
+                                        key={
+                                            item.gallery_id
+                                        }
+                                    >
+
+                                        {/* ID */}
+
+                                        <td>
+                                            {
+                                                item.gallery_id
+                                            }
+                                        </td>
+
+
+                                        {/* IMAGE */}
+
+                                        <td>
+
+                                            {
+                                                item.image_url ? (
+
+                                                    <img
+                                                        src={getImageUrl(item.image_url)}
+                                                        alt={item.title || "Gallery"}
+                                                        width="100"
+                                                        height="70"
+                                                        style={{
+                                                            objectFit: "cover",
+                                                            borderRadius: "8px",
+                                                            border: "1px solid #ddd"
+                                                        }}
+                                                        onError={(e) => {
+                                                            console.log("Image failed:", e.target.src);
+                                                        }}
+                                                    />
+
+                                                ) : (
+
+                                                    <span>
+                                                        No Image
+                                                    </span>
+
+                                                )
+
+                                            }
+
+                                        </td>
+
+
+                                        {/* TITLE */}
+
+                                        <td>
+                                            {
+                                                item.title
+                                            }
+                                        </td>
+
+
+                                        {/* DESCRIPTION */}
+
+                                        <td>
+                                            {
+                                                item.description
+                                            }
+                                        </td>
+
+
+                                        {/* CATEGORY */}
+
+                                        <td>
+                                            {
+                                                item.category
+                                            }
+                                        </td>
+
+
+                                        {/* STATUS */}
+
+                                        <td>
+
+                                            <span
+
+                                                className={
+                                                    item.status
+                                                        ? "status-active"
+                                                        : "status-inactive"
+                                                }
+
+                                            >
+
+                                                {
+                                                    item.status
+                                                        ? "Active"
+                                                        : "Inactive"
+                                                }
+
+                                            </span>
+
+                                        </td>
+
+
+                                        {/* ACTION */}
+
+                                        <td>
+
+                                            <button
+
+                                                className="btn btn-warning btn-sm me-2"
+
+                                                onClick={() =>
+                                                    editGallery(
+                                                        item
+                                                    )
+                                                }
+
+                                            >
+
+                                                Edit
+
+                                            </button>
+
+
+                                            <button
+
+                                                className="btn btn-danger btn-sm"
+
+                                                onClick={() =>
+                                                    deleteGallery(
+                                                        item.gallery_id
+                                                    )
+                                                }
+
+                                            >
+
+                                                Delete
+
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+
+                                ))
+
+                            )
                         }
 
                     </tbody>
