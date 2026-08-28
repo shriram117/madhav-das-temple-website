@@ -330,16 +330,13 @@ function Gallery() {
 
                                                     <img
                                                         src={getImageUrl(item.image_url)}
-                                                        alt={item.title || "Gallery"}
-                                                        width="100"
-                                                        height="70"
-                                                        style={{
-                                                            objectFit: "cover",
-                                                            borderRadius: "8px",
-                                                            border: "1px solid #ddd"
-                                                        }}
+                                                        alt={item.title || "Temple Gallery"}
+                                                        loading="lazy"
                                                         onError={(e) => {
-                                                            console.log("Image failed:", e.target.src);
+                                                            console.error(
+                                                                "Gallery image failed:",
+                                                                e.currentTarget.src
+                                                            );
                                                         }}
                                                     />
 
