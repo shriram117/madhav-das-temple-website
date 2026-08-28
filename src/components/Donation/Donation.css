@@ -1,45 +1,245 @@
+/* =========================================
+   DONATION SECTION
+========================================= */
+
 .donation-section {
-    padding: 100px 0;
-    background: #FFF8F2;
-    text-align: center;
+    padding: 70px 20px;
+    background: #fff8f1;
+    border-top: 3px solid #b71c1c;
 }
 
-.donation-text {
-    max-width: 700px;
-    margin: auto;
-    margin-bottom: 50px;
-    color: #555;
+.donation-section-label {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    background: #fff0df;
+    color: #d86608;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
+/* =========================================
+   HEADING
+========================================= */
+
+.donation-heading {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 35px;
+}
+
+
+    .donation-heading h2 {
+        margin: 0 0 10px;
+        font-size: 30px;
+        font-weight: 700;
+        color: #171717;
+    }
+
+
+    .donation-heading p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #666;
+    }
+
+
+/* =========================================
+   DONATION CARD
+========================================= */
 
 .donation-card {
-    max-width: 450px;
-    margin: auto;
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0,0,0,.1);
+    width: 100%;
+    max-width: 390px;
+    margin: 0 auto;
+    padding: 28px 28px 24px;
+    background: #ffffff;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+    border: 1px solid #f1e4d8;
 }
+
+
+/* =========================================
+   CARD TITLE
+========================================= */
+
+.donation-card-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+
+    .donation-card-title span {
+        font-size: 22px;
+    }
+
+
+    .donation-card-title h3 {
+        margin: 0;
+        font-size: 21px;
+        color: #d35400;
+    }
+
+
+/* =========================================
+   QR
+========================================= */
+
+.qr-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px auto 12px;
+}
+
 
 .qr-image {
-    width: 250px;
-    margin-bottom: 30px;
+    width: 230px;
+    height: 230px;
+    object-fit: contain;
+    display: block;
+    border-radius: 8px;
+}
+
+
+/* =========================================
+   SCAN TEXT
+========================================= */
+
+.scan-text {
+    margin: 5px 0 18px;
+    font-size: 13px;
+    color: #777;
+}
+
+
+/* =========================================
+   UPI BOX
+========================================= */
+
+.upi-box {
+    background: #fff6ec;
+    border: 1px solid #ffd9b3;
     border-radius: 10px;
+    padding: 12px 10px;
+    margin-bottom: 12px;
 }
 
-.donation-card h4 {
-    color: #E67E22;
+
+.upi-label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #e87511;
 }
 
-.donation-card h5 {
-    margin: 15px 0;
+
+.upi-box strong {
+    display: block;
+    font-size: 14px;
+    color: #222;
+    word-break: break-all;
 }
+
+
+/* =========================================
+   COPY BUTTON
+========================================= */
+
+.copy-upi-button {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e87511;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #d86608;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: all 0.2s ease;
+}
+
+
+    .copy-upi-button:hover {
+        background: #fff3e5;
+    }
+
+
+/* =========================================
+   DONATE BUTTON
+========================================= */
 
 .donate-button {
-    background: #E67E22;
-    color: white;
+    width: 100%;
+    padding: 12px 20px;
     border: none;
-    padding: 14px 35px;
-    border-radius: 50px;
-    margin-top: 20px;
-    font-weight: bold;
+    border-radius: 25px;
+    background: #e87511;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(232, 117, 17, 0.25);
+    transition: all 0.2s ease;
+}
+
+
+    .donate-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(232, 117, 17, 0.32);
+    }
+
+
+/* =========================================
+   NOTE
+========================================= */
+
+.donation-note {
+    margin: 15px 0 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #888;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 576px) {
+
+    .donation-section {
+        padding: 50px 15px;
+    }
+
+
+    .donation-heading h2 {
+        font-size: 24px;
+    }
+
+
+    .donation-heading p {
+        font-size: 14px;
+    }
+
+
+    .donation-card {
+        max-width: 350px;
+        padding: 22px 18px;
+    }
+
+
+    .qr-image {
+        width: 210px;
+        height: 210px;
+    }
 }

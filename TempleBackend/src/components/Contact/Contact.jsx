@@ -6,18 +6,27 @@ import API_BASE_URL from "../../config/api";
 import {
     FaMapMarkerAlt,
     FaPhoneAlt,
-    FaEnvelope
+    FaEnvelope,
+    FaClock,
+    FaOm
 } from "react-icons/fa";
+
 
 function Contact() {
 
     const [settings, setSettings] = useState({});
+
 
     useEffect(() => {
 
         loadSettings();
 
     }, []);
+
+
+    // =========================================
+    // LOAD TEMPLE SETTINGS
+    // =========================================
 
     const loadSettings = async () => {
 
@@ -27,115 +36,326 @@ function Contact() {
                 `${API_BASE_URL}/settings`
             );
 
+            console.log(
+                "Contact Settings:",
+                response.data
+            );
+
             setSettings(response.data);
 
         }
         catch (err) {
 
-            console.log(err);
+            console.error(
+                "Contact Settings Error:",
+                err
+            );
 
         }
 
     };
 
+
+    // =========================================
+    // GOOGLE MAP URL
+    // Supports:
+    // 1. Complete iframe code
+    // 2. Direct Google Map URL
+    // =========================================
+
+    const getGoogleMapUrl = (mapValue) => {
+
+        if (!mapValue) {
+
+            return "https://www.google.com/maps/embed?pb=!4v1787944650737!6m8!1m7!1sMsbm7CHCMlu2wKMD16PUpg!2m2!1d27.15639959358455!2d75.56262622615263!3f21.306830547492716!4f-22.648376217330465!5f0.7820865974627469";
+
+        }
+
+
+        const value = mapValue.trim();
+
+
+        // Complete iframe code
+        if (value.includes("<iframe")) {
+
+            const match =
+                value.match(
+                    /src=["']([^"']+)["']/i
+                );
+
+            if (match && match[1]) {
+
+                return match[1];
+
+            }
+
+        }
+
+
+        // Direct URL
+        return value;
+
+    };
+
+
+    const mapUrl = getGoogleMapUrl(
+        settings.google_map
+    );
+
+
     return (
 
-        <section id="contact" className="contact-section">
+        <section
+            id="contact"
+            className="contact-section"
+        >
 
             <div className="container">
 
-                <h2 className="text-center mb-5">
 
-                    Contact Us
+                {/* =========================================
+                    SECTION HEADER
+                ========================================= */}
 
-                </h2>
+                <div className="contact-heading">
 
-                <div className="row">
+                    <div className="heading-decoration">
+                        ✦
+                    </div>
 
-                    <div className="col-lg-5">
 
-                        <div className="contact-card">
+                    <h2>
 
-                            <h3>
+                        <FaMapMarkerAlt />
 
-                                {
-                                    settings.temple_name ||
-                                    "Shri Madhav Das Ji Temple"
-                                }
+                        मंदिर से संपर्क करें
 
-                            </h3>
+                    </h2>
 
-                            <p>
 
-                                <FaMapMarkerAlt className="icon" />
+                    <p>
 
-                                {
-                                    settings.address ||
-                                    "Temple Address"
-                                }
+                        श्री श्री 1008 बाबा माधवदास जी महाराज मंदिर,
+                        घिनोई
 
-                            </p>
+                    </p>
 
-                            <p>
+                </div>
 
-                                <FaPhoneAlt className="icon" />
 
-                                {
-                                    settings.mobile_no ||
-                                    "+91-XXXXXXXXXX"
-                                }
+                {/* =========================================
+                    MAIN CONTENT
+                ========================================= */}
 
-                            </p>
+                <div className="contact-grid">
 
-                            <p>
 
-                                <FaEnvelope className="icon" />
+                    {/* =====================================
+                        LEFT CONTACT CARD
+                    ===================================== */}
 
-                                {
-                                    settings.email ||
-                                    "info@temple.com"
-                                }
+                    <div className="contact-card">
 
-                            </p>
+
+                        <h3>
+
+                            {
+                                settings.temple_name ||
+                                "श्री श्री 1008 बाबा माधवदास जी महाराज"
+                            }
+
+                        </h3>
+
+
+                        <div className="card-divider">
+                            ✦
+                        </div>
+
+
+                        {/* ADDRESS */}
+
+                        <div className="contact-item">
+
+                            <div className="contact-icon">
+
+                                <FaMapMarkerAlt />
+
+                            </div>
+
+
+                            <div className="contact-content">
+
+                                <strong>
+                                    स्थान
+                                </strong>
+
+                                <span>
+
+                                    {
+                                        settings.address ||
+                                        "Vpo-Ghinoi, Via-Kaladera, Teh-Chomu, Jaipur (Rajasthan) 303702"
+                                    }
+
+                                </span>
+
+                            </div>
 
                         </div>
 
+
+                        {/* PHONE */}
+
+                        <div className="contact-item">
+
+                            <div className="contact-icon">
+
+                                <FaPhoneAlt />
+
+                            </div>
+
+
+                            <div className="contact-content">
+
+                                <strong>
+                                    संपर्क नंबर
+                                </strong>
+
+                                <span>
+
+                                    {
+                                        settings.mobile_no ||
+                                        "+91 96379 31008"
+                                    }
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        {/* EMAIL */}
+
+                        <div className="contact-item">
+
+                            <div className="contact-icon">
+
+                                <FaEnvelope />
+
+                            </div>
+
+
+                            <div className="contact-content">
+
+                                <strong>
+                                    ईमेल
+                                </strong>
+
+                                <span>
+
+                                    {
+                                        settings.email ||
+                                        "1008shrimadhavdasji@gmail.com"
+                                    }
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        {/* DARSHAN TIME */}
+
+                        <div className="contact-item">
+
+                            <div className="contact-icon">
+
+                                <FaClock />
+
+                            </div>
+
+
+                            <div className="contact-content">
+
+                                <strong>
+                                    दर्शन समय
+                                </strong>
+
+                                <span>
+                                    प्रातः 5:00 बजे से दोपहर 12:00 बजे तक
+                                </span>
+
+                                <span>
+                                    सायं 4:00 बजे से रात्रि 9:00 बजे तक
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
                     </div>
 
-                    <div className="col-lg-7">
+
+                    {/* =====================================
+                        RIGHT GOOGLE MAP
+                    ===================================== */}
+
+                    <div className="map-card">
 
                         <div className="map-container">
 
-                            {
-                                settings.google_map ?
-
-                                    <iframe
-                                        title="Temple Location"
-                                        src={settings.google_map}
-                                        width="100%"
-                                        height="350"
-                                        style={{ border: 0 }}
-                                        loading="lazy"
-                                        allowFullScreen
-                                    ></iframe>
-
-                                    :
-
-                                    <iframe
-                                        title="Temple Location"
-                                        src="https://www.google.com/maps?q=Ghinoi,Jaipur,Rajasthan&output=embed"
-                                        width="100%"
-                                        height="350"
-                                        style={{ border: 0 }}
-                                        loading="lazy"
-                                    ></iframe>
-                            }
+                            <iframe
+                                title="Shri Shri 1008 Baba Madhavdas Ji Maharaj Temple Location"
+                                src={mapUrl}
+                                loading="lazy"
+                                allowFullScreen
+                                referrerPolicy="strict-origin-when-cross-origin"
+                            ></iframe>
 
                         </div>
 
                     </div>
 
+
                 </div>
+
+
+                {/* =========================================
+                    WELCOME BANNER
+                ========================================= */}
+
+                <div className="welcome-banner">
+
+
+                    <div className="welcome-icon">
+
+                        <FaOm />
+
+                    </div>
+
+
+                    <div className="welcome-content">
+
+                        <h3>
+                            आपका स्वागत है!
+                        </h3>
+
+                        <p>
+                            मंदिर में पधारें और बाबा माधवदास जी महाराज
+                            के दर्शन कर धन्य हों।
+                        </p>
+
+                        <div className="welcome-line">
+                            ✦
+                        </div>
+
+                    </div>
+
+
+                </div>
+
 
             </div>
 
@@ -144,5 +364,6 @@ function Contact() {
     );
 
 }
+
 
 export default Contact;
