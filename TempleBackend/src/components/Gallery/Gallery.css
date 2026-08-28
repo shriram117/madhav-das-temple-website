@@ -1,80 +1,202 @@
-.gallery-section {
-    padding: 90px 0;
-    background: #FFF8F2;
+/* =========================================
+   ADMIN GALLERY PAGE
+========================================= */
+
+.gallery-page {
+    padding: 20px;
+    width: 100%;
 }
 
-    .gallery-section h2 {
-        color: #E67E22;
-        font-size: 46px;
-        font-weight: 700;
-        margin-bottom: 60px;
+
+/* =========================================
+   HEADER
+========================================= */
+
+.gallery-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+    .gallery-header h2 {
+        margin: 0;
+        font-size: 24px;
     }
 
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 30px;
-}
 
-.gallery-item {
-    overflow: hidden;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.15);
-    transition: .4s;
-    cursor: pointer;
-}
+    /* =========================================
+   ADD BUTTON
+========================================= */
 
-    .gallery-item:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0,0,0,.25);
+    .gallery-header .btn {
+        white-space: nowrap;
     }
 
-    .gallery-item img {
-        width: 100%;
-        height: 380px;
-        object-fit: cover;
+
+/* =========================================
+   GALLERY TABLE
+========================================= */
+
+.gallery-page table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+
+    /* Column widths */
+
+    .gallery-page table th:nth-child(1),
+    .gallery-page table td:nth-child(1) {
+        width: 55px;
+    }
+
+    .gallery-page table th:nth-child(2),
+    .gallery-page table td:nth-child(2) {
+        width: 130px;
+    }
+
+    .gallery-page table th:nth-child(3),
+    .gallery-page table td:nth-child(3) {
+        width: 180px;
+    }
+
+    .gallery-page table th:nth-child(4),
+    .gallery-page table td:nth-child(4) {
+        width: 250px;
+    }
+
+    .gallery-page table th:nth-child(5),
+    .gallery-page table td:nth-child(5) {
+        width: 130px;
+    }
+
+    .gallery-page table th:nth-child(6),
+    .gallery-page table td:nth-child(6) {
+        width: 100px;
+    }
+
+    .gallery-page table th:nth-child(7),
+    .gallery-page table td:nth-child(7) {
+        width: 150px;
+    }
+
+
+/* =========================================
+   PREVIEW CELL
+========================================= */
+
+.gallery-page td:nth-child(2) {
+    padding: 8px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+
+    /* =========================================
+   GALLERY IMAGE
+========================================= */
+
+    .gallery-page td:nth-child(2) img {
         display: block;
-        transition: .5s;
+        width: 100px !important;
+        height: 70px !important;
+        max-width: 100px !important;
+        max-height: 70px !important;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        margin: auto;
     }
 
-    .gallery-item:hover img {
-        transform: scale(1.08);
-    }
 
-.gallery-btn {
-    margin-top: 50px;
-    background: #E67E22;
-    color: #fff;
-    border: none;
-    padding: 15px 40px;
-    border-radius: 50px;
-    font-size: 18px;
+/* =========================================
+   TEXT
+========================================= */
+
+.gallery-page td {
+    vertical-align: middle;
+    word-break: break-word;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.status-active {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    background: #d9f5df;
+    color: #198754;
+    font-size: 12px;
     font-weight: 600;
-    transition: .3s;
 }
 
-    .gallery-btn:hover {
-        background: #c96c17;
-    }
 
-@media(max-width:991px) {
-
-    .gallery-grid {
-        grid-template-columns: repeat(2,1fr);
-    }
-
-    .gallery-item img {
-        height: 300px;
-    }
+.status-inactive {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    background: #f8d7da;
+    color: #dc3545;
+    font-size: 12px;
+    font-weight: 600;
 }
 
-@media(max-width:768px) {
 
-    .gallery-grid {
-        grid-template-columns: 1fr;
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+.gallery-page td:last-child {
+    white-space: nowrap;
+}
+
+    .gallery-page td:last-child .btn {
+        margin-right: 5px;
     }
 
-    .gallery-item img {
-        height: 260px;
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 992px) {
+
+    .gallery-page {
+        padding: 15px;
+        overflow-x: auto;
     }
+
+        .gallery-page table {
+            min-width: 900px;
+        }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 576px) {
+
+    .gallery-page {
+        padding: 10px;
+    }
+
+    .gallery-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+        .gallery-header h2 {
+            font-size: 20px;
+        }
+
+        .gallery-header .btn {
+            font-size: 13px;
+        }
 }

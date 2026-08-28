@@ -324,24 +324,18 @@ function Gallery() {
                                         {/* IMAGE */}
 
                                         <td>
-
-                                            {
-                                                item.image_url ? (
-
-                                                    <img
-                                                        src={getImageUrl(item.image_url)}
-                                                        alt={item.title || "Gallery"}
-                                                        width="100"
-                                                        height="70"
-                                                        style={{
-                                                            objectFit: "cover",
-                                                            borderRadius: "8px",
-                                                            border: "1px solid #ddd"
-                                                        }}
-                                                        onError={(e) => {
-                                                            console.log("Image failed:", e.target.src);
-                                                        }}
-                                                    />
+                                            <img
+                                                src={getImageUrl(item.image_url)}
+                                                alt={item.title || "Gallery"}
+                                                className="gallery-preview"
+                                                onError={(e) => {
+                                                    console.log(
+                                                        "Image failed:",
+                                                        e.currentTarget.src
+                                                    );
+                                                }}
+                                            />
+                                        </td>
 
                                                 ) : (
 
