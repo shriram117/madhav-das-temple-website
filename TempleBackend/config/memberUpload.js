@@ -1,46 +1,18 @@
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-
-const uploadDir = path.join(
-    __dirname,
-    "../uploads/members"
-);
-
-if (!fs.existsSync(uploadDir)) {
-
-    fs.mkdirSync(
-        uploadDir,
-        {
-            recursive: true
-        }
-    );
-
-}
 
 
-const storage = multer.diskStorage({
+// =========================================
+// MEMORY STORAGE
+// Cloudinary के लिए file RAM में मिलेगी
+// req.file.buffer के रूप में
+// =========================================
 
-    destination: function (req, file, cb) {
+const storage = multer.memoryStorage();
 
-        cb(null, uploadDir);
 
-    },
-
-    filename: function (req, file, cb) {
-
-        const extension =
-            path.extname(file.originalname);
-
-        const filename =
-            `${Date.now()}-${Math.round(Math.random() * 1E9)}${extension}`;
-
-        cb(null, filename);
-
-    }
-
-});
-
+// =========================================
+// FILE FILTER
+// =========================================
 
 const fileFilter = (req, file, cb) => {
 
@@ -55,8 +27,7 @@ const fileFilter = (req, file, cb) => {
 
         cb(null, true);
 
-    }
-    else {
+    } else {
 
         cb(
             new Error(
@@ -69,6 +40,10 @@ const fileFilter = (req, file, cb) => {
 };
 
 
+// =========================================
+// MULTER
+// =========================================
+
 const upload = multer({
 
     storage: storage,
@@ -76,9 +51,7 @@ const upload = multer({
     fileFilter: fileFilter,
 
     limits: {
-
         fileSize: 5 * 1024 * 1024
-
     }
 
 });

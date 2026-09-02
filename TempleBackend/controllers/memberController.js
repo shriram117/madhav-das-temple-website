@@ -1,4 +1,39 @@
 const pool = require("../config/db");
+const cloudinary = require("../config/cloudinary");
+
+
+// ======================================================
+// CLOUDINARY UPLOAD HELPER
+// ======================================================
+
+const uploadToCloudinary = (fileBuffer) => {
+
+    return new Promise((resolve, reject) => {
+
+        const stream = cloudinary.uploader.upload_stream(
+
+            {
+                folder: "madhav-das/members",
+                resource_type: "image"
+            },
+
+            (error, result) => {
+
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+
+            }
+
+        );
+
+        stream.end(fileBuffer);
+
+    });
+
+};
 
 
 // ======================================================
@@ -83,6 +118,11 @@ const createMember = async (req, res) => {
 
     try {
 
+        console.log("========== CREATE MEMBER ==========");
+        console.log("BODY:", req.body);
+        console.log("FILE:", req.file);
+
+
         const {
             member_name,
             designation,
@@ -96,6 +136,10 @@ const createMember = async (req, res) => {
         } = req.body;
 
 
+        // ==========================================
+        // VALIDATE MEMBER NAME
+        // ==========================================
+
         if (!member_name || !member_name.trim()) {
 
             return res.status(400).json({
@@ -105,12 +149,44 @@ const createMember = async (req, res) => {
         }
 
 
-        const image_url = req.file
-            ? `/uploads/members/${req.file.filename}`
-            : null;
+        // ==========================================
+        // CLOUDINARY IMAGE
+        // ==========================================
 
+        let image_url = null;
+
+
+        if (req.file) {
+
+            console.log(
+                "Uploading member image to Cloudinary..."
+            );
+
+
+            const uploadResult =
+                await uploadToCloudinary(
+                    req.file.buffer
+                );
+
+
+            image_url =
+                uploadResult.secure_url;
+
+
+            console.log(
+                "Cloudinary Member Image:",
+                image_url
+            );
+
+        }
+
+
+        // ==========================================
+        // INSERT DATABASE
+        // ==========================================
 
         const result = await pool.query(
+
             `
             INSERT INTO member_master
             (
@@ -142,24 +218,40 @@ const createMember = async (req, res) => {
             )
             RETURNING *
             `,
+
             [
+
                 member_name,
+
                 designation || null,
+
                 mobile_no || null,
+
                 email || null,
+
                 address || null,
+
                 image_url,
+
                 description || null,
+
                 display_order || 1,
+
                 status === undefined
                     ? true
-                    : status === "true" || status === true,
+                    : status === "true" ||
+                    status === true,
+
                 created_by || null
+
             ]
+
         );
 
 
         res.status(201).json({
+
+            success: true,
 
             message: "Member created successfully",
 
@@ -171,19 +263,24 @@ const createMember = async (req, res) => {
     catch (err) {
 
         console.error(
-            "Create Member Error:",
+            "❌ Create Member Error:",
             err
         );
 
+
         res.status(500).json({
 
-            message: "Failed to create member"
+            success: false,
+
+            message: err.message ||
+                "Failed to create member"
 
         });
 
     }
 
 };
+
 
 // ======================================================
 // UPDATE MEMBER
@@ -193,7 +290,14 @@ const updateMember = async (req, res) => {
 
     try {
 
+        console.log("========== UPDATE MEMBER ==========");
+        console.log("ID:", req.params.id);
+        console.log("BODY:", req.body);
+        console.log("FILE:", req.file);
+
+
         const { id } = req.params;
+
 
         const {
             member_name,
@@ -207,6 +311,10 @@ const updateMember = async (req, res) => {
         } = req.body;
 
 
+        // ==========================================
+        // VALIDATE MEMBER NAME
+        // ==========================================
+
         if (!member_name || !member_name.trim()) {
 
             return res.status(400).json({
@@ -218,21 +326,69 @@ const updateMember = async (req, res) => {
         }
 
 
-        let query;
-        let values;
+        // ==========================================
+        // CHECK MEMBER EXISTS
+        // ==========================================
+
+        const existingMember =
+            await pool.query(
+
+                `
+                SELECT *
+                FROM member_master
+                WHERE member_id = $1
+                `,
+
+                [id]
+
+            );
+
+
+        if (existingMember.rows.length === 0) {
+
+            return res.status(404).json({
+
+                message: "Member not found"
+
+            });
+
+        }
 
 
         // ==========================================
-        // NEW IMAGE SELECTED
+        // NEW IMAGE
         // ==========================================
 
         if (req.file) {
 
+            console.log(
+                "Uploading new member image to Cloudinary..."
+            );
+
+
+            const uploadResult =
+                await uploadToCloudinary(
+                    req.file.buffer
+                );
+
+
             const image_url =
-                `/uploads/members/${req.file.filename}`;
+                uploadResult.secure_url;
 
 
-            query = `
+            console.log(
+                "New Cloudinary Image:",
+                image_url
+            );
+
+
+            // ======================================
+            // UPDATE WITH NEW IMAGE
+            // ======================================
+
+            const result = await pool.query(
+
+                `
                 UPDATE member_master
                 SET
                     member_name = $1,
@@ -247,108 +403,109 @@ const updateMember = async (req, res) => {
                     modified_on = CURRENT_TIMESTAMP
                 WHERE member_id = $10
                 RETURNING *
-            `;
+                `,
+
+                [
+
+                    member_name,
+
+                    designation || null,
+
+                    mobile_no || null,
+
+                    email || null,
+
+                    address || null,
+
+                    image_url,
+
+                    description || null,
+
+                    display_order || 1,
+
+                    status === undefined
+                        ? true
+                        : status === "true" ||
+                        status === true,
+
+                    id
+
+                ]
+
+            );
 
 
-            values = [
+            return res.json({
 
-                member_name,
+                success: true,
 
-                designation || null,
+                message:
+                    "Member updated successfully",
 
-                mobile_no || null,
-
-                email || null,
-
-                address || null,
-
-                image_url,
-
-                description || null,
-
-                display_order || 1,
-
-                status === undefined
-                    ? true
-                    : status === "true" || status === true,
-
-                id
-
-            ];
-
-        }
-
-        // ==========================================
-        // NO NEW IMAGE
-        // KEEP OLD IMAGE
-        // ==========================================
-
-        else {
-
-            query = `
-                UPDATE member_master
-                SET
-                    member_name = $1,
-                    designation = $2,
-                    mobile_no = $3,
-                    email = $4,
-                    address = $5,
-                    description = $6,
-                    display_order = $7,
-                    status = $8,
-                    modified_on = CURRENT_TIMESTAMP
-                WHERE member_id = $9
-                RETURNING *
-            `;
-
-
-            values = [
-
-                member_name,
-
-                designation || null,
-
-                mobile_no || null,
-
-                email || null,
-
-                address || null,
-
-                description || null,
-
-                display_order || 1,
-
-                status === undefined
-                    ? true
-                    : status === "true" || status === true,
-
-                id
-
-            ];
-
-        }
-
-
-        const result = await pool.query(
-            query,
-            values
-        );
-
-
-        if (result.rows.length === 0) {
-
-            return res.status(404).json({
-
-                message: "Member not found"
+                member: result.rows[0]
 
             });
 
         }
 
 
+        // ==========================================
+        // NO NEW IMAGE
+        // KEEP OLD CLOUDINARY IMAGE
+        // ==========================================
+
+        const result = await pool.query(
+
+            `
+            UPDATE member_master
+            SET
+                member_name = $1,
+                designation = $2,
+                mobile_no = $3,
+                email = $4,
+                address = $5,
+                description = $6,
+                display_order = $7,
+                status = $8,
+                modified_on = CURRENT_TIMESTAMP
+            WHERE member_id = $9
+            RETURNING *
+            `,
+
+            [
+
+                member_name,
+
+                designation || null,
+
+                mobile_no || null,
+
+                email || null,
+
+                address || null,
+
+                description || null,
+
+                display_order || 1,
+
+                status === undefined
+                    ? true
+                    : status === "true" ||
+                    status === true,
+
+                id
+
+            ]
+
+        );
+
+
         res.json({
 
-            message: "Member updated successfully",
+            success: true,
+
+            message:
+                "Member updated successfully",
 
             member: result.rows[0]
 
@@ -358,13 +515,17 @@ const updateMember = async (req, res) => {
     catch (err) {
 
         console.error(
-            "Update Member Error:",
+            "❌ Update Member Error:",
             err
         );
 
+
         res.status(500).json({
 
-            message: "Failed to update member"
+            success: false,
+
+            message: err.message ||
+                "Failed to update member"
 
         });
 
@@ -384,42 +545,105 @@ const deleteMember = async (req, res) => {
         const { id } = req.params;
 
 
+        // ==========================================
+        // GET MEMBER
+        // ==========================================
+
+        const memberResult =
+            await pool.query(
+
+                `
+                SELECT *
+                FROM member_master
+                WHERE member_id = $1
+                `,
+
+                [id]
+
+            );
+
+
+        if (memberResult.rows.length === 0) {
+
+            return res.status(404).json({
+
+                message: "Member not found"
+
+            });
+
+        }
+
+
+        // ==========================================
+        // DELETE DATABASE RECORD
+        // ==========================================
+
         const result = await pool.query(
+
             `
             DELETE FROM member_master
             WHERE member_id = $1
             RETURNING *
             `,
+
             [id]
+
         );
 
 
         if (result.rows.length === 0) {
 
             return res.status(404).json({
+
                 message: "Member not found"
+
             });
 
         }
 
 
+        // ==========================================
+        // NOTE:
+        // Cloudinary old image is not deleted here
+        // because database currently stores only URL.
+        // ==========================================
+
+
         res.json({
-            message: "Member deleted successfully"
+
+            success: true,
+
+            message:
+                "Member deleted successfully"
+
         });
 
     }
     catch (err) {
 
-        console.error("Delete Member Error:", err);
+        console.error(
+            "Delete Member Error:",
+            err
+        );
+
 
         res.status(500).json({
-            message: "Failed to delete member"
+
+            success: false,
+
+            message:
+                "Failed to delete member"
+
         });
 
     }
 
 };
 
+
+// ======================================================
+// EXPORT
+// ======================================================
 
 module.exports = {
 
