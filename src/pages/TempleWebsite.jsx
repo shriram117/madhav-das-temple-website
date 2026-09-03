@@ -14,6 +14,7 @@ import UpcomingEvents from "../components/UpcomingEvents/UpcomingEvents";
 import ScrollTop from "../components/ScrollTop/ScrollTop";
 import NoticeBoard from "../components/NoticeBoard/NoticeBoard";
 import MemberDetails from "../components/MemberDetails/MemberDetails";
+import TempleLocations from "../components/TempleLocations/TempleLocations";
 function TempleWebsite() {
 
     return (
@@ -33,6 +34,7 @@ function TempleWebsite() {
             <MemberDetails />
             <Gallery />
             <Donation />
+            <TempleLocations />
             <Contact />
             <Footer />
             <ScrollTop />

@@ -103,7 +103,11 @@ function Login() {
                 } else if (permissions?.members === true) {
 
                     navigate("/admin/members");
+                } else if (permissions?.locations === true) {
 
+                    navigate("/admin/locations");
+
+                }
                 } else if (permissions?.donations === true) {
 
                     navigate("/admin/donations");
@@ -124,7 +128,7 @@ function Login() {
 
             }
 
-        }
+        //}
         catch (err) {
 
             console.error(

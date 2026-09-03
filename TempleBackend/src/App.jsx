@@ -13,9 +13,8 @@ import Services from "./admin/pages/Services";
 import NoticeBoard from "./admin/pages/NoticeBoard";
 import Members from "./admin/pages/Members";
 import Donation from "./admin/pages/Donation";
-
 import ProtectedRoute from "./admin/components/ProtectedRoute";
-
+import Locations from "./admin/pages/Locations";
 
 function App() {
 
@@ -153,7 +152,18 @@ function App() {
                 }
             />
 
+            {/* =====================================
+    TEMPLE LOCATIONS
+===================================== */}
 
+            <Route
+                path="/admin/locations"
+                element={
+                    <ProtectedRoute permission="locations">
+                        <Locations />
+                    </ProtectedRoute>
+                }
+            />
             {/* =====================================
                 USERS
             ===================================== */}

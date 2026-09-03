@@ -21,7 +21,7 @@ const serviceRoutes = require("./routes/serviceRoutes");
 const noticeRoutes = require("./routes/noticeRoutes");
 const memberRoutes = require("./routes/memberRoutes");
 const donationRoutes = require("./routes/donationRoutes");
-
+const locationRoutes = require("./routes/locationRoutes");
 // AI CHAT ROUTE
 const chatRoutes = require("./routes/chatRoutes");
 
@@ -223,7 +223,7 @@ app.use(
     "/api/donations",
     donationRoutes
 );
-
+app.use("/api/locations", locationRoutes);
 
 // ======================================================
 // AI CHAT ROUTE

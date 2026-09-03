@@ -59,3 +59,12 @@
             width: 100%;
         }
 }
+
+.members-page img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    margin: 0 auto;
+}

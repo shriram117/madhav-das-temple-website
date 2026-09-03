@@ -71,6 +71,7 @@ const login = async (req, res) => {
                 services: true,
                 notice: true,
                 members: true,
+                locations: true,
                 news: true,
                 users: true,
                 settings: true

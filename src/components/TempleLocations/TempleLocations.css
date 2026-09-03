@@ -1,0 +1,341 @@
+/* =====================================================
+   TEMPLE LOCATIONS
+===================================================== */
+
+.temple-locations-section {
+    position: relative;
+    padding: 85px 20px;
+    background: linear-gradient( 180deg, #fffaf2 0%, #fff 100% );
+    overflow: hidden;
+}
+
+.temple-locations-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* =====================================================
+   HEADING
+===================================================== */
+
+.temple-locations-heading {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+    .temple-locations-heading span {
+        display: inline-block;
+        font-size: 42px;
+        margin-bottom: 8px;
+    }
+
+    .temple-locations-heading h2 {
+        margin: 0;
+        font-size: 38px;
+        font-weight: 700;
+        color: #8b4513;
+        line-height: 1.3;
+    }
+
+    .temple-locations-heading p {
+        margin: 10px 0 0;
+        color: #777;
+        font-size: 17px;
+    }
+
+    /* Decorative line */
+
+    .temple-locations-heading::after {
+        content: "";
+        display: block;
+        width: 80px;
+        height: 3px;
+        margin: 18px auto 0;
+        background: #c66a00;
+        border-radius: 10px;
+    }
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.temple-locations-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.temple-location-card {
+    position: relative;
+    background: #ffffff;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(198, 106, 0, 0.12);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .temple-location-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.14);
+    }
+
+/* =====================================================
+   IMAGE
+===================================================== */
+
+.temple-location-image {
+    position: relative;
+    width: 100%;
+    height: 245px;
+    overflow: hidden;
+    background: #f4eee6;
+}
+
+    .temple-location-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.5s ease;
+    }
+
+.temple-location-card:hover
+.temple-location-image img {
+    transform: scale(1.06);
+}
+
+/* Image overlay */
+
+.temple-location-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient( to bottom, transparent 55%, rgba(0, 0, 0, 0.35) );
+    pointer-events: none;
+}
+
+/* =====================================================
+   NO IMAGE
+===================================================== */
+
+.location-no-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 65px;
+}
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.temple-location-content {
+    padding: 24px;
+}
+
+    .temple-location-content h3 {
+        margin: 0 0 10px;
+        color: #7a3e00;
+        font-size: 23px;
+        font-weight: 700;
+        line-height: 1.35;
+    }
+
+.location-place {
+    display: inline-block;
+    margin-bottom: 14px;
+    padding: 5px 11px;
+    background: #fff3e2;
+    color: #9b5000;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* =====================================================
+   DETAILS
+===================================================== */
+
+.temple-location-content p {
+    margin: 8px 0;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+    .temple-location-content p strong {
+        color: #333;
+    }
+
+    .temple-location-content p a {
+        color: #9b5000;
+        text-decoration: none;
+    }
+
+        .temple-location-content p a:hover {
+            text-decoration: underline;
+        }
+
+/* =====================================================
+   DESCRIPTION
+===================================================== */
+
+.location-description {
+    margin-top: 13px !important;
+    padding-top: 13px;
+    border-top: 1px solid #eee;
+    color: #666 !important;
+}
+
+/* =====================================================
+   DIRECTIONS BUTTON
+===================================================== */
+
+.location-directions-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+    padding: 11px 18px;
+    background: #c66a00;
+    color: #fff !important;
+    border-radius: 8px;
+    text-decoration: none !important;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+    .location-directions-btn:hover {
+        background: #9e5200;
+        transform: translateY(-2px);
+    }
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.locations-loading {
+    text-align: center;
+    padding: 50px 20px;
+    color: #777;
+    font-size: 16px;
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 992px) {
+
+    .temple-locations-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .temple-locations-section {
+        padding: 60px 15px;
+    }
+
+    .temple-locations-heading {
+        margin-bottom: 35px;
+    }
+
+        .temple-locations-heading span {
+            font-size: 34px;
+        }
+
+        .temple-locations-heading h2 {
+            font-size: 29px;
+        }
+
+        .temple-locations-heading p {
+            font-size: 15px;
+        }
+
+    .temple-locations-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .temple-location-image {
+        height: 220px;
+    }
+
+    .temple-location-content {
+        padding: 20px;
+    }
+
+        .temple-location-content h3 {
+            font-size: 21px;
+        }
+}
+/* =====================================================
+   LOCATION ACTION BUTTONS
+===================================================== */
+
+.location-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.location-contact-btn,
+.location-directions-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none !important;
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.location-contact-btn {
+    background: #2e7d32;
+    color: #fff !important;
+}
+
+    .location-contact-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+
+.location-directions-btn {
+    margin-top: 0;
+    background: #c66a00;
+    color: #fff !important;
+}
+
+    .location-directions-btn:hover {
+        background: #9e5200;
+        transform: translateY(-2px);
+    }
+
+@media (max-width: 600px) {
+
+    .location-actions {
+        flex-direction: column;
+    }
+
+    .location-contact-btn,
+    .location-directions-btn {
+        width: 100%;
+    }
+}

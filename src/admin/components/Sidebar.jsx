@@ -83,6 +83,12 @@ function Sidebar() {
             icon: "👥",
             permission: "members"
         },
+        {
+            name: "Temple Locations",
+            path: "/admin/locations",
+            icon: "📍",
+            permission: "locations"
+        },
 
         {
             name: "News",
@@ -112,12 +118,12 @@ function Sidebar() {
     // FILTER MENUS
     // =====================================
 
-    const allowedMenus = menus.filter(
-        (menu) =>
-            permissions[menu.permission] === true
-    );
+    // const allowedMenus = menus.filter(
+    //     (menu) =>
+    //         permissions[menu.permission] === true
+    // );
 
-
+    const allowedMenus = menus;
     return (
 
         <div className="sidebar">

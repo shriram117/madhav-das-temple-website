@@ -17,7 +17,7 @@ import Donation from "./admin/pages/Donation";
 import ProtectedRoute from "./admin/components/ProtectedRoute";
 
 import ChatBot from "./ChatBot";
-
+import Locations from "./admin/pages/Locations";
 
 function App() {
 
@@ -161,7 +161,18 @@ function App() {
                     </ProtectedRoute>
                 }
             />
+            {/* =====================================
+    TEMPLE LOCATIONS
+===================================== */}
 
+            <Route
+                path="/admin/locations"
+                element={
+                    <ProtectedRoute permission="locations">
+                        <Locations />
+                    </ProtectedRoute>
+                }
+            />
 
             {/* =====================================
                 USERS

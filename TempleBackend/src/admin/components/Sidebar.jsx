@@ -5,26 +5,12 @@ function Sidebar() {
 
     const location = useLocation();
 
-    // =====================================
-    // GET LOGGED-IN USER
-    // =====================================
-
     const user = JSON.parse(
         localStorage.getItem("user") || "null"
     );
 
+    const permissions = user?.permissions || {};
 
-    // =====================================
-    // USER PERMISSIONS
-    // =====================================
-
-    const permissions =
-        user?.permissions || {};
-
-
-    // =====================================
-    // MENU LIST
-    // =====================================
 
     const menus = [
 
@@ -84,6 +70,19 @@ function Sidebar() {
             permission: "members"
         },
 
+        // =====================================
+        // TEMPLE LOCATIONS
+        // ALWAYS SHOW IN SIDEBAR
+        // =====================================
+
+        {
+            name: "Temple Locations",
+            path: "/admin/locations",
+            icon: "📍",
+            permission: "locations",
+            alwaysShow: true
+        },
+
         {
             name: "News",
             path: "/admin/news",
@@ -109,11 +108,12 @@ function Sidebar() {
 
 
     // =====================================
-    // FILTER MENUS
+    // FILTER MENU
     // =====================================
 
     const allowedMenus = menus.filter(
         (menu) =>
+            menu.alwaysShow === true ||
             permissions[menu.permission] === true
     );
 
@@ -122,70 +122,74 @@ function Sidebar() {
 
         <div className="sidebar">
 
-            {/* =================================
-                LOGO
-            ================================= */}
+            {/* =====================================
+                LOGO / TITLE
+            ===================================== */}
 
-            <div className="sidebar-logo">
+            <div className="sidebar-header">
 
-                🛕
-                <h4>
+                <span className="sidebar-logo">
+                    🛕
+                </span>
+
+                <span>
                     Temple Admin
-                </h4>
+                </span>
 
             </div>
 
 
-            {/* =================================
+            {/* =====================================
                 MENU
-            ================================= */}
+            ===================================== */}
 
-            <ul>
+            <div className="sidebar-menu">
 
-                {
-                    allowedMenus.map(
-                        (menu) => (
+                {allowedMenus.map((menu) => (
 
-                            <li
-                                key={menu.path}
-                                className={
-                                    location.pathname === menu.path
-                                        ? "active"
-                                        : ""
-                                }
-                            >
+                    <Link
+                        key={menu.path}
+                        to={menu.path}
+                        className={
+                            location.pathname === menu.path
+                                ? "sidebar-link active"
+                                : "sidebar-link"
+                        }
+                    >
 
-                                <Link
-                                    to={menu.path}
-                                >
+                        <span className="sidebar-icon">
+                            {menu.icon}
+                        </span>
 
-                                    <span>
-                                        {menu.icon}
-                                    </span>
+                        <span>
+                            {menu.name}
+                        </span>
 
-                                    {menu.name}
+                    </Link>
 
-                                </Link>
+                ))}
 
-                            </li>
-
-                        )
-                    )
-
-                }
-
-            </ul>
+            </div>
 
 
-            {/* =================================
+            {/* =====================================
                 LOGOUT
-            ================================= */}
+            ===================================== */}
 
-            <div className="logout">
+            <div className="sidebar-footer">
 
-                <Link to="/login">
+                <Link
+                    to="/logout"
+                    className="sidebar-link logout-link"
+                >
 
-                    🚪 Logout
+                    <span className="sidebar-icon">
+                        📕
+                    </span>
+
+                    <span>
+                        Logout
+                    </span>
 
                 </Link>
 
@@ -194,7 +198,6 @@ function Sidebar() {
         </div>
 
     );
-
 }
 
 export default Sidebar;
